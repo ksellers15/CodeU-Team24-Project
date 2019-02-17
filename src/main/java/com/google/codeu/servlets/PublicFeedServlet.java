@@ -50,6 +50,8 @@ public class PublicFeedServlet extends HttpServlet {
 
     response.setContentType("application/json");
 
+    String user  = request.getParameter("user");
+
     List<Message> messages = datastore.getAllMessages();
     Gson gson = new Gson();
     String json = gson.toJson(messages);
