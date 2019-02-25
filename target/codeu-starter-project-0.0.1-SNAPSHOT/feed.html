@@ -4,6 +4,7 @@
     <title>Message Feed</title>
       <link rel="stylesheet" href="/css/main.css">
       <link rel="stylesheet" href="/css/user-page.css">
+      <script src="https://cdn.ckeditor.com/ckeditor5/11.2.0/classic/ckeditor.js"></script>
 
         <script>
 
@@ -113,6 +114,7 @@
 
           // Fetch data and populate the UI of the page.
           function buildUI(){
+          // ClassicEditor.create( document.getElementById('message-input'));
            fetchMessages();
            showMessageFormIfLoggedIn();
            addLoginOrLogoutLinkToNavigation();
@@ -127,7 +129,7 @@
          </ul>
        </nav>
       <h1>Message Feed</h1>
-        <form id="message-form" action="/messages" method="POST" class="hidden">
+        <form id="message-form" action="/feed" method="POST" class="hidden">
           Enter a new message:
           <br/>
           <textarea name="text" id="message-input"></textarea>

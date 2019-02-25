@@ -63,18 +63,19 @@ public class PublicFeedServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-    // UserService userService = UserServiceFactory.getUserService();
-    // if (!userService.isUserLoggedIn()) {
-    //   response.sendRedirect("/index.html");
-    //   return;
-    // }
-    //
-    // String user = userService.getCurrentUser().getEmail();
-    // String text = Jsoup.clean(request.getParameter("text"), Whitelist.none());
-    //
-    // Message message = new Message(user, text);
-    // datastore.storeMessage(message);
-    //
-    // response.sendRedirect("/user-page.html?user=" + user);
+    UserService userService = UserServiceFactory.getUserService();
+    if (!userService.isUserLoggedIn()) {
+      response.sendRedirect("/login");
+      return;
+    }
+
+    String user = userService.getCurrentUser().getEmail();
+    String text = Jsoup.clean(request.getParameter("text"), Whitelist.none());
+
+    Message message = new Message(user, text);
+    datastore.storeMessage(message);
+
+    response.sendRedirect("/feed.html");
+
   }
 }
