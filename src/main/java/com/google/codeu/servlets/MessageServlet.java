@@ -71,7 +71,7 @@ public class MessageServlet extends HttpServlet {
 
     UserService userService = UserServiceFactory.getUserService();
     if (!userService.isUserLoggedIn()) {
-      response.sendRedirect("/login");
+      response.sendRedirect("/index.html");
       return;
     }
 

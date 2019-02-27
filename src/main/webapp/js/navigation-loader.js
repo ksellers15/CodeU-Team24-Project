@@ -36,7 +36,6 @@ function addLoginOrLogoutLinkToNavigation() {
 
           navigationElement.appendChild(
               createListItem(createLink('/logout', 'Logout')));
-              
         } else {
           navigationElement.appendChild(
               createListItem(createLink('/login', 'Login')));
