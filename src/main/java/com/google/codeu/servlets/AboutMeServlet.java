@@ -24,7 +24,7 @@ public class AboutMeServlet extends HttpServlet {
   public void init() {
     datastore = new Datastore();
   }
-
+ 
   /**
    * Responds with the "about me" section for a particular user.
    */
