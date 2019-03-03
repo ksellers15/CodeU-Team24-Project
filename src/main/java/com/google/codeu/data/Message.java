@@ -31,16 +31,16 @@ public class Message {
    * Constructs a new {@link Message} posted by {@code user} with {@code text} content. Generates a
    * random ID and uses the current system time for the creation time.
    */
-  public Message(String user, String text) {
-    this(UUID.randomUUID(), user, text, System.currentTimeMillis(), recipient);
-  }
+  public Message(String user, String text, String recipient) {
+	  this(UUID.randomUUID(), user, text, System.currentTimeMillis(), recipient);
+	}
 
   public Message(UUID id, String user, String text, long timestamp, String recipient) {
-    this.id = id;
-    this.user = user;
-    this.text = text;
-    this.timestamp = timestamp;
-    this.recipient = recipient;
+	  this.id = id;
+	  this.user = user;
+	  this.text = text;
+	  this.timestamp = timestamp;
+	  this.recipient = recipient;
   }
 
   public UUID getId() {
@@ -59,7 +59,7 @@ public class Message {
     return timestamp;
   }
   
-  public String getRecipient() {
+  public String getRecipient(){
 	  return recipient;
   }
 }
