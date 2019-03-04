@@ -1,5 +1,5 @@
-C:\Users\kv154\CodeU-Team24-Project\src\main\java\com\google\codeu\servlets
-C:\Users\kv154\CodeU-Team24-Project\src\main\java\com\google\codeu\data
-C:\Users\kv154\CodeU-Team24-Project\src\main\java\com\google\codeu
-C:\Users\kv154\CodeU-Team24-Project\src\main
-C:\Users\kv154\CodeU-Team24-Project\src\main\webapp
+src/main/java/com/google/codeu/servlets/AboutMeServlet.java
+src/main/java/com/google/codeu/data/Datastore.java
+src/main/java/com/google/codeu/data/User.java
+src/main/webapp/js/user-page-loader.js
+src/main/webapp/user-page.html
