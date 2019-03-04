@@ -1,0 +1,8 @@
+src/main/java/com/google/codeu/servlets/LoginServlet.java
+src/main/java/com/google/codeu/servlets/LoginStatusServlet.java
+src/main/java/com/google/codeu/servlets/LogoutServlet.java
+src/main/webapp/WEB-INF
+src/main/webapp/css
+src/main/webapp/user-page.html
+src/main/webapp/index.html
+src/main/webapp/js/navigation-loader.js
