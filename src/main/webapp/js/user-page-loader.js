@@ -110,6 +110,9 @@ function buildUI() {
   setPageTitle();
   showMessageFormIfViewingSelf();
   fetchMessages();
+
   fetchAboutMe();
+}
+
 }
 
