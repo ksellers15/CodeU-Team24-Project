@@ -1,5 +1,1 @@
-src/main/java/com/google/codeu/servlets/AboutMeServlet.java
-src/main/java/com/google/codeu/data/Datastore.java
-src/main/java/com/google/codeu/data/User.java
-src/main/webapp/js/user-page-loader.js
-src/main/webapp/user-page.html
+target/
