@@ -63,6 +63,12 @@ public class MessageServlet extends HttpServlet {
     String json = gson.toJson(messages);
 
     response.getWriter().println(json);
+	
+	String targetLanguageCode = request.getParameter("language");
+
+	if(targetLanguageCode != null) {
+		translateMessages(messages, targetLanguageCode);
+	}
   }
 
   /** Stores a new {@link Message}. */
