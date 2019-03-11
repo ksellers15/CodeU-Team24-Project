@@ -99,7 +99,7 @@ function fetchAboutMe(){
     if(aboutMe == ''){
       aboutMe = 'This user has not entered any information yet.';
     }
-    
+
     aboutMeContainer.innerHTML = aboutMe;
 
   });
@@ -113,6 +113,3 @@ function buildUI() {
 
   fetchAboutMe();
 }
-
-}
-

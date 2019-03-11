@@ -72,7 +72,12 @@ public class PublicFeedServlet extends HttpServlet {
     String user = userService.getCurrentUser().getEmail();
     String text = Jsoup.clean(request.getParameter("text"), Whitelist.none());
 
-    Message message = new Message(user, text);
+    String regex = "(https?://\\S+\\.(jpg|png))";
+    String replacement = "<img src=\"$1\" />";
+
+    String userTextWithImagesReplaced = text.replaceAll(regex, replacement);
+
+    Message message = new Message(user, userTextWithImagesReplaced);
     datastore.storeMessage(message);
 
     response.sendRedirect("/feed.html");
