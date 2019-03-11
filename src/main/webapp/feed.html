@@ -64,6 +64,9 @@
                   if (loginStatus.isLoggedIn) {
                     const messageForm = document.getElementById('message-form');
                     messageForm.classList.remove('hidden');
+                  }else{
+                    const loginDiv = document.getElementById('login_to_post_message');
+                    loginDiv.classList.remove('hidden');
                   }
                 });
           }
