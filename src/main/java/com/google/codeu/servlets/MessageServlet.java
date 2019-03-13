@@ -78,8 +78,8 @@ public class MessageServlet extends HttpServlet {
 
     String user = userService.getCurrentUser().getEmail();
     String text = Jsoup.clean(request.getParameter("text"), Whitelist.none());
+    String recipient = request.getParameter("recipient");
 
-    //formatImages() simply reads the text the user imput and converts image links to <img> tags in html
     Message message = new Message(user, MessageUtil.formatImages(text), recipient);
     datastore.storeMessage(message);
 

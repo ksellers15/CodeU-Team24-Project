@@ -58,7 +58,7 @@ public class Datastore {
 
     Query query =
         new Query("Message")
-            .setFilter(new Query.FilterPredicate("user", FilterOperator.EQUAL, recipient))
+            .setFilter(new Query.FilterPredicate("recipient", FilterOperator.EQUAL, recipient))
             .addSort("timestamp", SortDirection.DESCENDING);
     PreparedQuery results = datastore.prepare(query);
 
@@ -66,14 +66,14 @@ public class Datastore {
       try {
         String idString = entity.getKey().getName();
         UUID id = UUID.fromString(idString);
-	String user = (String) entity.getProperty("user");
+        String user = (String) entity.getProperty("user");
+
         String text = (String) entity.getProperty("text");
         long timestamp = (long) entity.getProperty("timestamp");
-	String recipient = (String) entity.getProperty("recipient");
 
         Message message = new Message(id, user, text, timestamp, recipient);
         messages.add(message);
-      } catch (Exception e) {	
+      } catch (Exception e) {
         System.err.println("Error reading message.");
         System.err.println(entity.toString());
         e.printStackTrace();
@@ -83,7 +83,7 @@ public class Datastore {
     return messages;
   }
 
-  
+
   /** Returns the total number of messages for all users. */
   public int getTotalMessageCount(){
     Query query = new Query("Message");
@@ -135,7 +135,7 @@ public class Datastore {
         String text = (String) entity.getProperty("text");
         long timestamp = (long) entity.getProperty("timestamp");
 
-        Message message = new Message(id, (String) entity.getProperty("user"), text, timestamp);
+        Message message = new Message(id, (String) entity.getProperty("user"), text, timestamp, "");
         messages.add(message);
       } catch (Exception e) {
         System.err.println("Error reading message.");
