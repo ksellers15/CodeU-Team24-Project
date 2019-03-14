@@ -44,7 +44,8 @@
 
            const bodyDiv = document.createElement('div');
            bodyDiv.classList.add('message-body');
-           bodyDiv.appendChild(document.createTextNode(message.text));
+           bodyDiv.innerHTML = message.text;
+           // bodyDiv.appendChild(document.createTextNode(message.text));
 
            const messageDiv = document.createElement('div');
            messageDiv.classList.add("message-div");
@@ -63,6 +64,9 @@
                   if (loginStatus.isLoggedIn) {
                     const messageForm = document.getElementById('message-form');
                     messageForm.classList.remove('hidden');
+                  }else{
+                    const loginDiv = document.getElementById('login_to_post_message');
+                    loginDiv.classList.remove('hidden');
                   }
                 });
           }
