@@ -94,6 +94,7 @@ public class MessageServlet extends HttpServlet {
     response.sendRedirect("/user-page.html?user=" + user);
   }
   
+  //takes a List of Message instances, iterates over them, and translates their text to the target language
   private void translateMessages(List<Message> messages, String targetLanguageCode) {
 	Translate translate = TranslateOptions.getDefaultInstance().getService();
 

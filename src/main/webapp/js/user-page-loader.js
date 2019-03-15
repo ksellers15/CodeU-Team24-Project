@@ -49,7 +49,12 @@ function showMessageFormIfViewingSelf() {
 
 /** Fetches messages and add them to the page. */
 function fetchMessages() {
-  const url = '/messages?user=' + parameterUsername;
+  //const url = '/messages?user=' + parameterUsername;
+  const parameterLanguage = urlParams.get('language');
+  let url = '/messages?user=' + parameterUsername;
+  if(parameterLanguage) {
+	url += '&language=' + parameterLanguage;
+  }
   fetch(url)
       .then((response) => {
         return response.json();
@@ -66,11 +71,6 @@ function fetchMessages() {
           messagesContainer.appendChild(messageDiv);
         });
       });
-	const parameterLanguage = urlParams.get('language');
-	let url = '/messages?user=' + parameterUsername;
-	if(parameterLanguage) {
-		url += '&language=' + parameterLanguage;
-	}
 }
 
 /**
@@ -95,6 +95,8 @@ function buildMessageDiv(message) {
 
   return messageDiv;
 }
+
+
 function fetchAboutMe(){
   const url = '/about?user=' + parameterUsername;
   fetch(url).then((response) => {
@@ -108,15 +110,6 @@ function fetchAboutMe(){
     aboutMeContainer.innerHTML = aboutMe;
 
   });
-}
-
-/** Fetches data and populates the UI of the page. */
-function buildUI() {
-  setPageTitle();
-  showMessageFormIfViewingSelf();
-  fetchMessages();
-
-  fetchAboutMe();
 }
 
 /** Adds the language links to this list. */
@@ -135,5 +128,35 @@ function buildLanguageLinks(){
       userPageUrl + '&language=ar', 'Arabic')));
 }
 
+/**
+ * Creates an li element.
+ * @param {Element} childElement
+ * @return {Element} li element
+ */
+function createListItem(childElement) {
+  const listItemElement = document.createElement('li');
+  listItemElement.appendChild(childElement);
+  return listItemElement;
+} 
+
+/**
+ * Creates an anchor element.
+ * @param {string} url
+ * @param {string} text
+ * @return {Element} Anchor element
+ */
+function createLink(url, text) {
+  const linkElement = document.createElement('a');
+  linkElement.appendChild(document.createTextNode(text));
+  linkElement.href = url;
+  return linkElement;
 }
 
+/** Fetches data and populates the UI of the page. */
+function buildUI() {
+  setPageTitle();
+  buildLanguageLinks();
+  showMessageFormIfViewingSelf();
+  fetchMessages();
+  fetchAboutMe();
+}
