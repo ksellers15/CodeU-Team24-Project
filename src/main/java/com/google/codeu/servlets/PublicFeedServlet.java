@@ -32,8 +32,8 @@ import org.jsoup.safety.Whitelist;
 import com.google.codeu.utilities.*;
 
 /** Handles fetching and saving {@link Message} instances. */
-@WebServlet("/messages")
-public class MessageServlet extends HttpServlet {
+@WebServlet("/feed")
+public class PublicFeedServlet extends HttpServlet {
 
   private Datastore datastore;
 
@@ -51,15 +51,9 @@ public class MessageServlet extends HttpServlet {
 
     response.setContentType("application/json");
 
-    String user = request.getParameter("user");
+    String user  = request.getParameter("user");
 
-    if (user == null || user.equals("")) {
-      // Request is invalid, return empty array
-      response.getWriter().println("[]");
-      return;
-    }
-
-    List<Message> messages = datastore.getMessages(user);
+    List<Message> messages = datastore.getAllMessages();
     Gson gson = new Gson();
     String json = gson.toJson(messages);
 
@@ -72,17 +66,17 @@ public class MessageServlet extends HttpServlet {
 
     UserService userService = UserServiceFactory.getUserService();
     if (!userService.isUserLoggedIn()) {
-      response.sendRedirect("/index.html");
+      response.sendRedirect("/login");
       return;
     }
 
     String user = userService.getCurrentUser().getEmail();
     String text = Jsoup.clean(request.getParameter("text"), Whitelist.none());
-    String recipient = request.getParameter("recipient");
 
-    Message message = new Message(user, MessageUtil.formatImages(text), recipient);
+    Message message = new Message(user, MessageUtil.formatImages(text), user);
     datastore.storeMessage(message);
 
-    response.sendRedirect("/user-page.html?user=" + recipient);
+    response.sendRedirect("/feed.html");
+
   }
 }
