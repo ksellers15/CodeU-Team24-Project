@@ -9,7 +9,7 @@ repeated code in the servlets and other pojo files (Plain Old Java Object files)
 */
 public class MessageUtil {
 
-  public static final String IMAGE_REGEX = "(https?://\\S+\\.(jpg|png|gif))";
+  public static final String IMAGE_REGEX = "(https?://\\S+\\.(jpg|png|gif)\\b\\S*)";
   public static final String REPLACEMENT = "<img src=\"$1\" />";
 
   /*
