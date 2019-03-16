@@ -80,7 +80,9 @@ public class MessageServlet extends HttpServlet {
     String text = Jsoup.clean(request.getParameter("text"), Whitelist.none());
     String recipient = request.getParameter("recipient");
 
-    Message message = new Message(user, MessageUtil.formatImages(text), recipient);
+    //Formatting input to enable markdown and images
+    String formattedMessage = MessageUtil.formatText(MessageUtil.formatImages(text));
+    Message message = new Message(user, formattedMessage, recipient);
     datastore.storeMessage(message);
 
     response.sendRedirect("/user-page.html?user=" + recipient);
