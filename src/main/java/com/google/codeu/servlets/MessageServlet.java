@@ -33,6 +33,7 @@ import com.google.cloud.translate.Translate;
 import com.google.cloud.translate.Translate.TranslateOption;
 import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
+import com.google.codeu.utilities.*;
 
 /** Handles fetching and saving {@link Message} instances. */
 @WebServlet("/messages")
@@ -87,11 +88,12 @@ public class MessageServlet extends HttpServlet {
 
     String user = userService.getCurrentUser().getEmail();
     String text = Jsoup.clean(request.getParameter("text"), Whitelist.none());
+    String recipient = request.getParameter("recipient");
 
-    Message message = new Message(user, text);
+    Message message = new Message(user, MessageUtil.formatImages(text), recipient);
     datastore.storeMessage(message);
 
-    response.sendRedirect("/user-page.html?user=" + user);
+    response.sendRedirect("/user-page.html?user=" + recipient);
   }
   
   //takes a List of Message instances, iterates over them, and translates their text to the target language
