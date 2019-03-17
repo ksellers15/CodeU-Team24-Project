@@ -71,7 +71,7 @@ public class PublicFeedServlet extends HttpServlet {
     }
 
     String user = userService.getCurrentUser().getEmail();
-    String text = Jsoup.clean(request.getParameter("text"), Whitelist.none());
+    String text = Jsoup.clean(request.getParameter("text"), Whitelist.basic());
 
     String formattedMessage = MessageUtil.formatText(MessageUtil.formatImages(text));
     Message message = new Message(user, formattedMessage, user);

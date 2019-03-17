@@ -118,7 +118,8 @@
 
           // Fetch data and populate the UI of the page.
           function buildUI(){
-          // ClassicEditor.create( document.getElementById('message-input'));
+	   const config = {removePlugins: [ 'Heading', 'List', 'ImageUpload']};
+           ClassicEditor.create( document.getElementById('message-input'), config);
            fetchMessages();
            showMessageFormIfLoggedIn();
            addLoginOrLogoutLinkToNavigation();

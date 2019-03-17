@@ -17,6 +17,7 @@ public class MessageUtil {
    * 1) ** TEXT ** -> <b> TEXT </b>
    * 2) __ TEXT __ -> <i> TEXT </i>
    * 3) ~~ TEXT ~~ -> <strike> TEXT </strike>
+   * 4) -- TEXT -- -> <u> TEXT </u>
    */
   public static final String BOLD_REGEX = "##(.+)##";
   public static final String BOLD_REPLACEMENT = "<strong> $1 </strong>";
