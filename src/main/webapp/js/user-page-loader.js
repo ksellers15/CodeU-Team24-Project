@@ -49,7 +49,6 @@ function showMessageFormIfViewingSelf() {
 
 /** Fetches messages and add them to the page. */
 function fetchMessages() {
-  //const url = '/messages?user=' + parameterUsername;
   const parameterLanguage = urlParams.get('language');
   let url = '/messages?user=' + parameterUsername;
   if(parameterLanguage) {
