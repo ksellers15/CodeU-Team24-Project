@@ -1,6 +1,7 @@
 
 	let maps;
 	/** Creates a map that shows landmarks around Google. */
+	//This function is used to create the map and is where the landmark function is placed to add landmarks
 	function createMap(){
       
       const map = new google.maps.Map(document.getElementById('map'), {
@@ -14,6 +15,7 @@
     }
 
     /** Adds a marker that shows an InfoWindow when clicked. */
+    //This is the landmark function that adds points to the map with a description and it's cordinates.
      function addLandmark(map, lat, lng, title, description){
      
       const marker = new google.maps.Marker({
