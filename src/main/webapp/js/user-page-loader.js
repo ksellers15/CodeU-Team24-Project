@@ -95,12 +95,26 @@ function fetchAboutMe(){
     return response.text();
   }).then((aboutMe) => {
     const aboutMeText = document.getElementById('about_me_text');
-    const aboutMeForm = document.getElementById('about_me_form');
 
     if(aboutMe == ''){
-      aboutMeText.innerHTML = 'This user has not entered any information yet.';
+      //about me is empty, check to see if user is logged in
+      //if user logged in show the about me form
+      //if not keep the about me form hidden because it's not your page
+      fetch('/login-status')
+          .then((response) => {
+            return response.json();
+          })
+          .then((loginStatus) => {
+            if (loginStatus.isLoggedIn && loginStatus.username == parameterUsername) {
+              const aboutMeForm = document.getElementById('about_me_form');
+              aboutMeForm.classList.remove('hidden');
+              aboutMeText.innerHTML = 'You have not entered any information yet.';
+            }else{
+              aboutMeText.innerHTML = 'This user has not entered any information yet.';
+            }
+          });
     }else{
-      aboutMeText.innerHTML = aboutMe
+      aboutMeText.innerHTML = aboutMe;
     }
   });
 }
