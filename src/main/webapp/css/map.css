@@ -1,7 +1,6 @@
-
-
-	#map{
-      width: 500px;
-      height: 500px;
-      border: thin solid black;
-    }
+/*This is the css file that sizes the map and makes solid black borders*/
+#map{
+width: 500px;
+height: 500px;
+border: thin solid black;
+}
