@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
+import com.google.codeu.utilities.*;
 
 /** Handles fetching and saving {@link Message} instances. */
 @WebServlet("/feed")
@@ -72,7 +73,7 @@ public class PublicFeedServlet extends HttpServlet {
     String user = userService.getCurrentUser().getEmail();
     String text = Jsoup.clean(request.getParameter("text"), Whitelist.none());
 
-    Message message = new Message(user, text);
+    Message message = new Message(user, MessageUtil.formatImages(text), user);
     datastore.storeMessage(message);
 
     response.sendRedirect("/feed.html");
