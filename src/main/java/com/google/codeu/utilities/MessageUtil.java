@@ -11,7 +11,7 @@ public class MessageUtil {
   
   /* Text formatting replacement for using Markdown inputs by the user.
    * The following input turn into following outputs:
-   * 1) ** TEXT ** -> <b> TEXT </b>
+   * 1) ## TEXT ## -> <b> TEXT </b>
    * 2) __ TEXT __ -> <i> TEXT </i>
    * 3) ~~ TEXT ~~ -> <strike> TEXT </strike>
    * 4) -- TEXT -- -> <u> TEXT </u>
@@ -71,10 +71,6 @@ public class MessageUtil {
    * html tags in the html of the page using the regular expressions above (regex)
    */
   public static String formatText(String message) {
-	  String bold = message.replaceAll(BOLD_REGEX, BOLD_REPLACEMENT);
-	  String italic = bold.replaceAll(ITALIC_REGEX, ITALIC_REPLACEMENT);
-	  String strike = italic.replaceAll(STRIKE_REGEX, STRIKE_REPLACEMENT);
-	  String underline = strike.replaceAll(UNDERLINE_REGEX, UNDERLINE_REPLACEMENT);
-	  return underline;
+	  return message.replaceAll(BOLD_REGEX, BOLD_REPLACEMENT).replaceAll(ITALIC_REGEX, ITALIC_REPLACEMENT).replaceAll(STRIKE_REGEX, STRIKE_REPLACEMENT).replaceAll(UNDERLINE_REGEX, UNDERLINE_REPLACEMENT);
   }
 }

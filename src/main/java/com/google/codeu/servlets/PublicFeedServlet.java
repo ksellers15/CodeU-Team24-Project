@@ -73,8 +73,7 @@ public class PublicFeedServlet extends HttpServlet {
     String user = userService.getCurrentUser().getEmail();
     String text = Jsoup.clean(request.getParameter("text"), Whitelist.basic());
 
-    String formattedMessage = MessageUtil.formatText(MessageUtil.formatImages(text));
-    Message message = new Message(user, formattedMessage, user);
+    Message message = new Message(user, text, user);
     datastore.storeMessage(message);
 
     response.sendRedirect("/feed.html");
