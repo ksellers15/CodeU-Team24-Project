@@ -27,11 +27,10 @@ public class StarBucksMapServlet extends HttpServlet {
    String[] cells = line.split(",");
 
    String state = cells[0];
-   String country = cells[1];
-   double lat = Double.parseDouble(cells[2]);
-   double lng = Double.parseDouble(cells[3]);
+   double lat = Double.parseDouble(cells[1]);
+   double lng = Double.parseDouble(cells[2]);
 
-   starBucksLocArray.add(gson.toJsonTree(new StarBucks(state, country, lat, lng)));
+   starBucksLocArray.add(gson.toJsonTree(new StarBucks(state, lat, lng)));
   }
   scanner.close();
  }
@@ -44,13 +43,11 @@ public class StarBucksMapServlet extends HttpServlet {
 
  private static class StarBucks{
   String state;
-  String country;
   double lat;
   double lng;
 
-  private StarBucks(String state, String country, double lat, double lng) {
+  private StarBucks(String state, double lat, double lng) {
    this.state = state;
-   this.country = country;
    this.lat = lat;
    this.lng = lng;
   }
