@@ -42,13 +42,12 @@ function showMessageFormIfViewingSelf() {
           document.getElementById('recipientInput').value = parameterUsername;
           const messageForm = document.getElementById('message-form');
           messageForm.classList.remove('hidden');
-          if(loginStatus.username == parameterUsername){
-            fetchImageUploadUrlAndShowForm();
-          }
+          fetchImageUploadUrlAndShowForm();
         }
       });
 }
 
+//allows users to upload images from their storage
 function fetchImageUploadUrlAndShowForm() {
   fetch('/image-upload-url')
     .then((response) => {
@@ -100,7 +99,6 @@ function buildMessageDiv(message) {
   bodyDiv.classList.add('message-body');
   bodyDiv.innerHTML = message.text;
   if(message.imageUrl){
-    bodyDiv.innerHTML += '<br/>';
     bodyDiv.innerHTML += '<img src="' + message.imageUrl + '" />';
   }
 
