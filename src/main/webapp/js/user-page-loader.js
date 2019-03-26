@@ -64,7 +64,11 @@ function fetchImageUploadUrlAndShowForm() {
 
 /** Fetches messages and add them to the page. */
 function fetchMessages() {
-  const url = '/messages?user=' + parameterUsername;
+  const parameterLanguage = urlParams.get('language');
+  let url = '/messages?user=' + parameterUsername;
+  if(parameterLanguage) {
+	url += '&language=' + parameterLanguage;
+  }
   fetch(url)
       .then((response) => {
         return response.json();
@@ -105,6 +109,8 @@ function buildMessageDiv(message) {
 
   return messageDiv;
 }
+
+
 function fetchAboutMe(){
   const url = '/about?user=' + parameterUsername;
   fetch(url).then((response) => {
@@ -135,10 +141,52 @@ function fetchAboutMe(){
   });
 }
 
+/** Adds the language links to this list. */
+function buildLanguageLinks(){
+  const userPageUrl = '/user-page.html?user=' + parameterUsername;
+  const languagesListElement  = document.getElementById('languages');
+  languagesListElement.appendChild(createListItem(createLink(
+       userPageUrl + '&language=en', 'English')));
+  languagesListElement.appendChild(createListItem(createLink(
+      userPageUrl + '&language=zh', 'Chinese')));
+  languagesListElement.appendChild(createListItem(createLink(
+      userPageUrl + '&language=hi', 'Hindi')));
+  languagesListElement.appendChild(createListItem(createLink(
+      userPageUrl + '&language=es', 'Spanish')));
+  languagesListElement.appendChild(createListItem(createLink(
+      userPageUrl + '&language=ar', 'Arabic')));
+}
+
+/**
+ * Creates an li element.
+ * @param {Element} childElement
+ * @return {Element} li element
+ */
+function createListItem(childElement) {
+  const listItemElement = document.createElement('li');
+  listItemElement.appendChild(childElement);
+  return listItemElement;
+} 
+
+/**
+ * Creates an anchor element.
+ * @param {string} url
+ * @param {string} text
+ * @return {Element} Anchor element
+ */
+function createLink(url, text) {
+  const linkElement = document.createElement('a');
+  linkElement.appendChild(document.createTextNode(text));
+  linkElement.href = url;
+  return linkElement;
+}
+
 /** Fetches data and populates the UI of the page. */
 function buildUI() {
   setPageTitle();
+  buildLanguageLinks();
   showMessageFormIfViewingSelf();
   fetchMessages();
   fetchAboutMe();
 }
+
