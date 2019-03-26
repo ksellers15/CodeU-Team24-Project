@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Provides access to a URL that allows a user to upload an image to Blobstore.
  */
-@WebServlet("/image-upload-ur")
+@WebServlet("/image-upload-url")
 public class ImageUploadServlet extends HttpServlet{
   @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {

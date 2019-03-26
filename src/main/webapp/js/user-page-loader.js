@@ -41,12 +41,11 @@ function showMessageFormIfViewingSelf() {
         if (loginStatus.isLoggedIn) {
           const messageForm = document.getElementById('message-form');
           messageForm.classList.remove('hidden');
-
-          if(loginStatus.username == parameterUsername){
-            fetchImageUploadUrlAndShowForm();
-          }else{
-            messageForm.action = '/messages?recipient=' + parameterUsername;
-          }
+          document.getElementById('recipientInput').value = parameterUsername;
+          // if(loginStatus.username == parameterUsername){
+            // fetchImageUploadUrlAndShowForm();
+            // println("loged in to user page");
+          // }
         }
       });
 }
@@ -101,6 +100,10 @@ function buildMessageDiv(message) {
   const bodyDiv = document.createElement('div');
   bodyDiv.classList.add('message-body');
   bodyDiv.innerHTML = message.text;
+  if(message.imageUrl){
+    bodyDiv.innerHTML += '<br/>';
+    bodyDiv.innerHTML += '<img src="' + message.imageUrl + '" />';
+  }
 
   const messageDiv = document.createElement('div');
   messageDiv.classList.add('message-div');
@@ -166,7 +169,7 @@ function createListItem(childElement) {
   const listItemElement = document.createElement('li');
   listItemElement.appendChild(childElement);
   return listItemElement;
-} 
+}
 
 /**
  * Creates an anchor element.
@@ -189,4 +192,3 @@ function buildUI() {
   fetchMessages();
   fetchAboutMe();
 }
-

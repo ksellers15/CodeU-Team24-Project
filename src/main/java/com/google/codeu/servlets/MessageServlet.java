@@ -23,6 +23,7 @@ import com.google.codeu.data.Message;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -33,6 +34,8 @@ import com.google.cloud.translate.Translate;
 import com.google.cloud.translate.Translate.TranslateOption;
 import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
+import com.google.appengine.api.blobstore.*;
+import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.codeu.utilities.*;
 
 /** Handles fetching and saving {@link Message} instances. */
@@ -68,7 +71,7 @@ public class MessageServlet extends HttpServlet {
     String json = gson.toJson(messages);
 
     response.getWriter().println(json);
-	
+
 	String targetLanguageCode = request.getParameter("language");
 
 	if(targetLanguageCode != null) {
@@ -91,11 +94,25 @@ public class MessageServlet extends HttpServlet {
     String recipient = request.getParameter("recipient");
 
     Message message = new Message(user, MessageUtil.formatImages(text), recipient);
+
+    BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+    Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
+    List<BlobKey> blobKeys = blobs.get("image");
+
+    //Check to see if any images were uploaded
+    if(blobKeys != null && !blobKeys.isEmpty()){
+      BlobKey blobKey = blobKeys.get(0);
+      ImagesService imagesService = ImagesServiceFactory.getImagesService();
+      ServingUrlOptions options = ServingUrlOptions.Builder.withBlobKey(blobKey);
+      String imageUrl = imagesService.getServingUrl(options);
+      message.setImageUrl(imageUrl);
+    }
+
     datastore.storeMessage(message);
 
     response.sendRedirect("/user-page.html?user=" + recipient);
   }
-  
+
   //takes a List of Message instances, iterates over them, and translates their text to the target language
   private void translateMessages(List<Message> messages, String targetLanguageCode) {
 	Translate translate = TranslateOptions.getDefaultInstance().getService();
@@ -105,8 +122,8 @@ public class MessageServlet extends HttpServlet {
 
 		Translation translation = translate.translate(originalText, TranslateOption.targetLanguage(targetLanguageCode));
 		String translatedText = translation.getTranslatedText();
-      
+
 		message.setText(translatedText);
-	}    
+	}
 }
 }
