@@ -40,10 +40,26 @@ function showMessageFormIfViewingSelf() {
       .then((loginStatus) => {
         if (loginStatus.isLoggedIn) {
           const messageForm = document.getElementById('message-form');
-          messageForm.action = '/messages?recipient=' + parameterUsername;
           messageForm.classList.remove('hidden');
+
+          if(loginStatus.username == parameterUsername){
+            fetchImageUploadUrlAndShowForm();
+          }else{
+            messageForm.action = '/messages?recipient=' + parameterUsername;
+          }
         }
       });
+}
+
+function fetchImageUploadUrlAndShowForm() {
+  fetch('/image-upload-url')
+    .then((response) => {
+      return response.text();
+    })
+    .then((imageUploadUrl) => {
+      const messageForm = document.getElementById('message-form');
+      messageForm.action = imageUploadUrl;
+    });
 }
 
 /** Fetches messages and add them to the page. */
