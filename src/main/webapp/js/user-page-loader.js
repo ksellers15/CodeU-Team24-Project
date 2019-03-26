@@ -39,13 +39,12 @@ function showMessageFormIfViewingSelf() {
       })
       .then((loginStatus) => {
         if (loginStatus.isLoggedIn) {
+          document.getElementById('recipientInput').value = parameterUsername;
           const messageForm = document.getElementById('message-form');
           messageForm.classList.remove('hidden');
-          document.getElementById('recipientInput').value = parameterUsername;
-          // if(loginStatus.username == parameterUsername){
-            // fetchImageUploadUrlAndShowForm();
-            // println("loged in to user page");
-          // }
+          if(loginStatus.username == parameterUsername){
+            fetchImageUploadUrlAndShowForm();
+          }
         }
       });
 }

@@ -34,8 +34,14 @@ import com.google.cloud.translate.Translate;
 import com.google.cloud.translate.Translate.TranslateOption;
 import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
-import com.google.appengine.api.blobstore.*;
+import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.google.appengine.api.images.Image;
+import com.google.appengine.api.images.ImagesService;
+import com.google.appengine.api.images.ImagesServiceFactory;
+import com.google.appengine.api.images.ServingUrlOptions;
+import com.google.appengine.api.images.Transform;
 import com.google.codeu.utilities.*;
 
 /** Handles fetching and saving {@link Message} instances. */
@@ -72,11 +78,11 @@ public class MessageServlet extends HttpServlet {
 
     response.getWriter().println(json);
 
-	String targetLanguageCode = request.getParameter("language");
+    String targetLanguageCode = request.getParameter("language");
 
-	if(targetLanguageCode != null) {
-		translateMessages(messages, targetLanguageCode);
-	}
+  	if(targetLanguageCode != null) {
+  		translateMessages(messages, targetLanguageCode);
+  	}
   }
 
   /** Stores a new {@link Message}. */
