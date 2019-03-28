@@ -87,7 +87,7 @@ public class MessageServlet extends HttpServlet {
     }
 
     String user = userService.getCurrentUser().getEmail();
-    String text = Jsoup.clean(request.getParameter("text"), Whitelist.none());
+    String text = Jsoup.clean(request.getParameter("text"), Whitelist.basic());
     String recipient = request.getParameter("recipient");
 
     Message message = new Message(user, MessageUtil.formatImages(text), recipient);
@@ -103,13 +103,13 @@ public class MessageServlet extends HttpServlet {
   private void translateMessages(List<Message> messages, String targetLanguageCode) {
 	Translate translate = TranslateOptions.getDefaultInstance().getService();
 
-	for(Message message : messages) {
-		String originalText = message.getText();
+    for(Message message : messages) {
+      String originalText = message.getText();
 
-		Translation translation = translate.translate(originalText, TranslateOption.targetLanguage(targetLanguageCode));
-		String translatedText = translation.getTranslatedText();
+      Translation translation = translate.translate(originalText, TranslateOption.targetLanguage(targetLanguageCode));
+      String translatedText = translation.getTranslatedText();
 
-		message.setText(translatedText);
-	}
-}
+      message.setText(translatedText);
+    }
+  }
 }

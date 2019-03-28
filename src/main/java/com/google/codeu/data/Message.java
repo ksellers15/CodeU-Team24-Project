@@ -17,6 +17,7 @@
 package com.google.codeu.data;
 
 import java.util.UUID;
+import com.google.codeu.utilities.*;
 
 /** A single message posted by a user. */
 public class Message {
@@ -33,7 +34,7 @@ public class Message {
    * random ID and uses the current system time for the creation time.
    */
   public Message(String user, String text, String recipient) {
-    this(UUID.randomUUID(), user, text, System.currentTimeMillis(), recipient);
+    this(UUID.randomUUID(), user, MessageUtil.formatText(MessageUtil.formatImages(text)), System.currentTimeMillis(), recipient);
   }
 
   public Message(UUID id, String user, String text, long timestamp, String recipient) {
