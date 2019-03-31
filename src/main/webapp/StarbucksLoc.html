@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Starbucks Locations</title>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBh1fxg1zx9_d-y8cBCSrNp2bKlXvv21Ik"></script>
+  <script>  
+    function createStarbucksLocationMap(){
+      fetch('/Starbucks-loc').then(function(response) {
+        return response.json();
+      }).then((starbucksLocs) => {
+          
+        const map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: 35.78613674, lng: -119.4491591},
+          zoom:7
+        });
+
+        starbucksLocs.forEach((starbucksLoc) => {
+          new google.maps.Marker({
+            position: {lat: starbucksLoc.lat, lng: starbucksLoc.lng},
+            map: map
+          });  
+        });
+      });
+    }
+  </script>
+  <style>
+    #map{
+      width: 500px;
+      height: 500px;
+    }
+  </style>
+</head>
+<body onload="createStarbucksLocationMap();">
+ <h1>Starbucks Locations</h1>
+ <div id="map"></div>
+</body>
+</html>
