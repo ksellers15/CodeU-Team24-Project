@@ -45,7 +45,9 @@
            const bodyDiv = document.createElement('div');
            bodyDiv.classList.add('message-body');
            bodyDiv.innerHTML = message.text;
-           // bodyDiv.appendChild(document.createTextNode(message.text));
+           if(message.imageUrl){
+             bodyDiv.innerHTML += '<img src="' + message.imageUrl + '" />';
+           }
 
            const messageDiv = document.createElement('div');
            messageDiv.classList.add("message-div");
@@ -62,13 +64,24 @@
                 })
                 .then((loginStatus) => {
                   if (loginStatus.isLoggedIn) {
-                    const messageForm = document.getElementById('message-form');
-                    messageForm.classList.remove('hidden');
+                    fetchImageUploadUrlAndShowForm();
                   }else{
                     const loginDiv = document.getElementById('login_to_post_message');
                     loginDiv.classList.remove('hidden');
                   }
                 });
+          }
+
+          function fetchImageUploadUrlAndShowForm() {
+            fetch('/feed-image-upload-url')
+              .then((response) => {
+                return response.text();
+              })
+              .then((imageUploadUrl) => {
+                const messageForm = document.getElementById('message-form');
+                messageForm.action = imageUploadUrl;
+                messageForm.classList.remove('hidden');
+              });
           }
 
           function addLoginOrLogoutLinkToNavigation() {
@@ -134,10 +147,13 @@
          </ul>
        </nav>
       <h1>Public Feed</h1>
-        <form id="message-form" action="/feed" method="POST" class="hidden">
+        <form id="message-form" action="/feed" method="POST" class="hidden" enctype="multipart/form-data">
           Enter a new message:
           <br/>
           <textarea name="text" id="message-input"></textarea>
+          <br/>
+          Add an image to your post.
+          <input type="file" name="image">
           <br/>
           <input type="submit" value="Submit">
         </form>

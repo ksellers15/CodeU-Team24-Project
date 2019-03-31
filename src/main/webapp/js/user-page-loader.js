@@ -39,13 +39,24 @@ function showMessageFormIfViewingSelf() {
       })
       .then((loginStatus) => {
         if (loginStatus.isLoggedIn) {
+          document.getElementById('recipientInput').value = parameterUsername;
           const messageForm = document.getElementById('message-form');
-          messageForm.action = '/messages?recipient=' + parameterUsername;
           messageForm.classList.remove('hidden');
-
+          fetchImageUploadUrlAndShowForm();
         }
       });
-      document.getElementById('about-me-form').classList.remove('hidden');
+}
+
+//allows users to upload images from their storage
+function fetchImageUploadUrlAndShowForm() {
+  fetch('/image-upload-url')
+    .then((response) => {
+      return response.text();
+    })
+    .then((imageUploadUrl) => {
+      const messageForm = document.getElementById('message-form');
+      messageForm.action = imageUploadUrl;
+    });
 }
 
 /** Fetches messages and add them to the page. */
@@ -87,6 +98,9 @@ function buildMessageDiv(message) {
   const bodyDiv = document.createElement('div');
   bodyDiv.classList.add('message-body');
   bodyDiv.innerHTML = message.text;
+  if(message.imageUrl){
+    bodyDiv.innerHTML += '<img src="' + message.imageUrl + '" />';
+  }
 
   const messageDiv = document.createElement('div');
   messageDiv.classList.add('message-div');
@@ -102,13 +116,28 @@ function fetchAboutMe(){
   fetch(url).then((response) => {
     return response.text();
   }).then((aboutMe) => {
-    const aboutMeContainer = document.getElementById('about-me-container');
+    const aboutMeText = document.getElementById('about_me_text');
+
     if(aboutMe == ''){
-      aboutMe = 'This user has not entered any information yet.';
+      //about me is empty, check to see if user is logged in
+      //if user logged in show the about me form
+      //if not keep the about me form hidden because it's not your page
+      fetch('/login-status')
+          .then((response) => {
+            return response.json();
+          })
+          .then((loginStatus) => {
+            if (loginStatus.isLoggedIn && loginStatus.username == parameterUsername) {
+              const aboutMeForm = document.getElementById('about_me_form');
+              aboutMeForm.classList.remove('hidden');
+              aboutMeText.innerHTML = 'You have not entered any information yet.';
+            }else{
+              aboutMeText.innerHTML = 'This user has not entered any information yet.';
+            }
+          });
+    }else{
+      aboutMeText.innerHTML = aboutMe;
     }
-
-    aboutMeContainer.innerHTML = aboutMe;
-
   });
 }
 
@@ -137,7 +166,7 @@ function createListItem(childElement) {
   const listItemElement = document.createElement('li');
   listItemElement.appendChild(childElement);
   return listItemElement;
-} 
+}
 
 /**
  * Creates an anchor element.
@@ -160,4 +189,3 @@ function buildUI() {
   fetchMessages();
   fetchAboutMe();
 }
-
