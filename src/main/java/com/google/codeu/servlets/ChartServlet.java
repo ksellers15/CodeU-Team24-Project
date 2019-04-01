@@ -37,13 +37,18 @@ public class ChartServlet extends HttpServlet {
 
     String user = request.getParameter("user");
 
-    List<Message> messages = datastore.getMessages(user);
-    Gson gson = new Gson();
-    String json = gson.toJson(messages);
-
+	List<Message> msgList = datastore.getMessages(null);
+	Gson gson = new Gson();
+    String json = gson.toJson(msgList);
     response.getWriter().println(json);
 	
-	response.setContentType("application/json");
-    response.getWriter().println("slowly but surely");
+    //List<Message> messages = datastore.getMessages(user);
+    //Gson gson = new Gson();
+    //String json = gson.toJson(messages);
+
+    //response.getWriter().println(json);
+	
+	//response.setContentType("application/json");
+    //response.getWriter().println("slowly but surely");
   }
 }

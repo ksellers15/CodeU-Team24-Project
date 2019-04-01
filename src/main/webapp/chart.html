@@ -5,25 +5,9 @@
 	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 	<script type="text/javascript">
     google.charts.load('current', {packages: ['corechart']});
-    google.charts.setOnLoadCallback(drawChart);
-    function drawChart(){
-	  //create a new DataTable Instance
-      var book_data = new google.visualization.DataTable();
-	  
-	  //define columns for the DataTable instance
-	  book_data.addColumn('string', 'Book Title');
-	  book_data.addColumn('number', 'Votes');
-            
-	  //add data to book_data
-	  book_data.addRows([
-		["The Best We Could Do", 6],
-		["Sing, Unburied, Sing", 10],
-		["The Book of Unknown Americans", 7],
-		["The 57 Bus", 4],
-		["The Handmaid's Tale", 8]
-	  ]);
-	  
-	  var chart = new google.visualization.BarChart(document.getElementById('book_chart'));
+    google.charts.setOnLoadCallback(fetchMessageData);
+    function drawChart(chart_data){	  
+	  var chart = new google.visualization.BarChart(document.getElementById('chart'));
 	  
 	  //chart style
 	  var chart_options = {
@@ -32,12 +16,41 @@
       };
 	  
 	  //draw the chart
-	  chart.draw(book_data, chart_options);
+	  chart.draw(chart_data, chart_options);
+	}
+    
+	//turn the data being fetched into a DataTable class
+	function fetchMessageData() {
+        fetch("/messagechart")
+            .then((response) => {
+              return response.json();
+            })
+            .then((msgJson) => {
+              var msgData = new google.visualization.DataTable();
+              //define columns for the DataTable instance
+              msgData.addColumn('date', 'Date');
+              msgData.addColumn('number', 'Message Count');
+
+               
+              for (i = 0; i < msgJson.length; i++) {
+                  msgRow = [];
+                  var timestampAsDate = new Date (msgJson[i].timestamp);
+                  var totalMessages = i + 1;
+                  
+				  msgRow.push(timestampAsDate);
+				  msgRow.push(totalMessages);
+                  
+                  msgData.addRow(msgRow);
+
+              }
+              
+              drawChart(msgData);
+			});
     }
 </script>
   </head>
   <body>
     <h1>Chart Project</h1>
-	<div id="book_chart"></div>
+	<div id="chart"></div>
   </body>
 </html>
