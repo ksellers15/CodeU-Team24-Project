@@ -14,7 +14,7 @@ import com.google.appengine.api.users.UserServiceFactory;
 public class HomeServlet extends HttpServlet {
 
   @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
       UserService userService = UserServiceFactory.getUserService();
       boolean isUserLoggedIn = userService.isUserLoggedIn();
@@ -23,10 +23,6 @@ public class HomeServlet extends HttpServlet {
       if(isUserLoggedIn)
         request.setAttribute("username", userService.getCurrentUser().getEmail());
 
-      try{
-        request.getRequestDispatcher("WEB-INF/jsp/home.jsp").forward(request, response);
-      }catch(ServletException e){
-        e.printStackTrace();
-      }
+      request.getRequestDispatcher("WEB-INF/jsp/home.jsp").forward(request, response);
     }
 }
