@@ -89,8 +89,9 @@ public class MessageServlet extends HttpServlet {
     String user = userService.getCurrentUser().getEmail();
     String text = Jsoup.clean(request.getParameter("text"), Whitelist.basic());
     String recipient = request.getParameter("recipient");
+	float sentimentScore = getSentimentScore(text);
 
-    Message message = new Message(user, MessageUtil.formatImages(text), recipient);
+    Message message = new Message(user, MessageUtil.formatImages(text), sentimentScore);
 
     MessageUtil.checkIfImagesUploaded(request, message);
 
@@ -111,5 +112,17 @@ public class MessageServlet extends HttpServlet {
 
       message.setText(translatedText);
     }
+  }
+  
+  //a helper function that takes a String value and returns a score
+  private float getSentimentScore(String text) throws IOException {
+	Document doc = Document.newBuilder()
+      .setContent(text).setType(Type.PLAIN_TEXT).build();
+
+	LanguageServiceClient languageService = LanguageServiceClient.create();
+	Sentiment sentiment = languageService.analyzeSentiment(doc).getDocumentSentiment();
+	languageService.close();
+
+	return sentiment.getScore();
   }
 }
