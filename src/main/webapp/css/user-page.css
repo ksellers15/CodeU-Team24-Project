@@ -18,7 +18,7 @@
    and will fill the width of its parent element. */
 #message-input {
   height: 100px;
-  width: 100%;
+  width: 60%;
 }
 
 /* Give each message a rounded border. */
@@ -26,6 +26,7 @@
   border: thin solid black;
   border-radius: 5px;
   margin-top: 20px;
+  width: 60%
 }
 
 /* Add a bottom border to the message header. */
@@ -44,6 +45,12 @@
   display: block;
   margin-top: 25px;
   max-width: 75%;
+}
+
+.profile_image {
+    height: 20%;
+    width: 20%;
+    border-radius: 100px;
 }
 
 /* Use this to hide certain elements like forms if the

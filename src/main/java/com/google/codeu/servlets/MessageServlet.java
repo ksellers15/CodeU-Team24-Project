@@ -68,12 +68,12 @@ public class MessageServlet extends HttpServlet {
     String json = gson.toJson(messages);
 
     response.getWriter().println(json);
-	
-	String targetLanguageCode = request.getParameter("language");
 
-	if(targetLanguageCode != null) {
-		translateMessages(messages, targetLanguageCode);
-	}
+    String targetLanguageCode = request.getParameter("language");
+
+  	if(targetLanguageCode != null) {
+  		translateMessages(messages, targetLanguageCode);
+  	}
   }
 
   /** Stores a new {@link Message}. */
@@ -87,26 +87,29 @@ public class MessageServlet extends HttpServlet {
     }
 
     String user = userService.getCurrentUser().getEmail();
-    String text = Jsoup.clean(request.getParameter("text"), Whitelist.none());
+    String text = Jsoup.clean(request.getParameter("text"), Whitelist.basic());
     String recipient = request.getParameter("recipient");
 
     Message message = new Message(user, MessageUtil.formatImages(text), recipient);
+
+    MessageUtil.checkIfImagesUploaded(request, message);
+
     datastore.storeMessage(message);
 
     response.sendRedirect("/user-page.html?user=" + recipient);
   }
-  
+
   //takes a List of Message instances, iterates over them, and translates their text to the target language
   private void translateMessages(List<Message> messages, String targetLanguageCode) {
 	Translate translate = TranslateOptions.getDefaultInstance().getService();
 
-	for(Message message : messages) {
-		String originalText = message.getText();
+    for(Message message : messages) {
+      String originalText = message.getText();
 
-		Translation translation = translate.translate(originalText, TranslateOption.targetLanguage(targetLanguageCode));
-		String translatedText = translation.getTranslatedText();
-      
-		message.setText(translatedText);
-	}    
-}
+      Translation translation = translate.translate(originalText, TranslateOption.targetLanguage(targetLanguageCode));
+      String translatedText = translation.getTranslatedText();
+
+      message.setText(translatedText);
+    }
+  }
 }
