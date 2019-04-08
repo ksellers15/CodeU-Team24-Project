@@ -1,32 +1,24 @@
-<!--
-Copyright 2019 Google Inc.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
--->
-
-<!DOCTYPE html>
+<% boolean isUserLoggedIn = (boolean) request.getAttribute("isUserLoggedIn"); %>
 <html>
   <head>
     <meta charset="UTF-8">
     <title>CodeU 2019 Starter Project</title>
     <link rel="stylesheet" href="/css/main.css">
-    <script src="/js/navigation-loader.js"></script>
   </head>
-  <body style="text-align: center; "onload="addLoginOrLogoutLinkToNavigation();">
+  <body style="text-align: center;">
     <nav>
       <ul id="navigation">
         <li><a href="/home">Home</a></li>
         <li><a href="/feed.html">Public Feed</a></li>
+
+         <% if(isUserLoggedIn){
+          String username = (String) request.getAttribute("username");
+         %>
+         <li><a href="/user-page.html?user=<%= username %>">Your Page</a></li>
+         <li><a href="/logout">Logout</a></li>
+         <% }else{ %>
+           <li><a href="/login">Login</a></li>
+         <% } %>
 
       </ul>
     </nav>
