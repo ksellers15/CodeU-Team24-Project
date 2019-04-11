@@ -39,6 +39,8 @@ function addLoginOrLogoutLinkToNavigation() {
         } else {
           navigationElement.appendChild(
               createListItem(createLink('/login', 'Login')));
+          navigationElement.appendChild(
+              createListItem(createLink('/signup', 'Sign up')));
         }
       });
 }
