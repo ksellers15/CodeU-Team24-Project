@@ -74,15 +74,15 @@ public class SignUpServlet extends HttpServlet {
 
     String email = request.getParameter("email");
     String password = request.getParameter("password");
-    String isStudent[] = request.getParameterValues("account_type");
+    String accountType[] = request.getParameterValues("account_type");
 
     if(email.equals("")){
       response.sendRedirect("/signup" + "?err=1");
     }else if(password.equals("")){
       response.sendRedirect("/signup" + "?err=2");
-    }else if(isStudent == null){
+    }else if(accountType == null){
       response.sendRedirect("/signup" + "?err=3");
-    }else if(isStudent.length > 1){
+    }else if(accountType.length > 1){
       response.sendRedirect("/signup" + "?err=4");
     }
 
