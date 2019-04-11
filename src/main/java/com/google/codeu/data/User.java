@@ -57,4 +57,8 @@ public class User {
 
     return "PROFESSOR";
   }
+
+  public void setAboutMe(String text){
+    this.aboutMe = text;
+  }
 }

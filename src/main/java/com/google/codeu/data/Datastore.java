@@ -124,7 +124,7 @@ public class Datastore {
 
     String aboutMe = (String) userEntity.getProperty("aboutMe");
     String password = (String) userEntity.getProperty("password");
-    User.AccountType accType = (User.AccountType) userEntity.getProperty("account_type");
+    String accType = (String) userEntity.getProperty("account_type");
     User user = new User(email, aboutMe, password, accType);
     return user;
   }

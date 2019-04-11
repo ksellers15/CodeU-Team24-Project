@@ -27,6 +27,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 import com.google.cloud.translate.Translate;
@@ -80,13 +81,14 @@ public class MessageServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-    UserService userService = UserServiceFactory.getUserService();
-    if (!userService.isUserLoggedIn()) {
-      response.sendRedirect("/index.html");
+    HttpSession session = request.getSession();
+
+    if(session.getAttribute("logged_in") == null){
+      response.sendRedirect("/home");
       return;
     }
 
-    String user = userService.getCurrentUser().getEmail();
+    String user = (String) session.getAttribute("email");
     String text = Jsoup.clean(request.getParameter("text"), Whitelist.basic());
     String recipient = request.getParameter("recipient");
 
