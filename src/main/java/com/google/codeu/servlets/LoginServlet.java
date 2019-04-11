@@ -22,11 +22,12 @@ import com.google.appengine.api.users.UserServiceFactory;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import com.google.codeu.data.Datastore;
 import com.google.codeu.data.User;
-
 
 /**
  * Redirects the user to the Google login page or their page if they're already logged in.
@@ -43,26 +44,84 @@ public class LoginServlet extends HttpServlet {
 
 
   @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-    UserService userService = UserServiceFactory.getUserService();
+    HttpSession session = request.getSession();
 
-    // If the user is already logged in, redirect to their page
-    if (userService.isUserLoggedIn()) {
-      String user = userService.getCurrentUser().getEmail();
-      //If user is not in database then user is new and should be
-      //added to the database
-      if(datastore.getUser(user) == null){
-        User newUser = new User(user, "");
-        datastore.storeUser(newUser);
+    //if user tries to login again just redirect them to their pages
+    // if they aren't in the database yet add them to the database
+    if(session.getAttribute("logged_in") != null){
+      String email = (String) session.getAttribute("email");
+      if(!email.equals("")){
+        User user = datastore.getUser(email);
+        if(user == null){
+          datastore.storeUser(user);
+        }
+
+        response.sendRedirect("user-page.html?user=" + email);
+        return;
       }
-      response.sendRedirect("/user/" + user);
+    }
+
+    request.setAttribute("error", false);
+
+    String queryParam = request.getQueryString();
+    if(queryParam != null && queryParam.length() > 0){
+      int errorNumber = Integer.parseInt(request.getParameter("err"));
+      request.setAttribute("error", true);
+
+      switch(errorNumber){
+        case SignUpServlet.NULL_EMAIL_ERROR:
+          request.setAttribute("error_message", "Email cannot be null");
+          break;
+        case SignUpServlet.NULL_PASSWORD_ERROR:
+          request.setAttribute("error_message", "Password cannot be null");
+          break;
+        case SignUpServlet.INVALID_PASSWORD_ERROR:
+          request.setAttribute("error_message", "Invalid password try again");
+          break;
+        default:
+          break;
+      }
+    }
+
+    request.getRequestDispatcher("WEB-INF/jsp/login.jsp").forward(request, response);
+  }
+
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+    String email = request.getParameter("email");
+    String password = request.getParameter("password");
+
+
+    if(email.equals("")){
+      response.sendRedirect("/login" + "?err=1");
+      return;
+    }else if(password.equals("")){
+      response.sendRedirect("/login" + "?err=2");
       return;
     }
 
-    // Redirect to Google login page. That page will then redirect back to /login,
-    // which will be handled by the above if statement.
-    String googleLoginUrl = userService.createLoginURL("/login");
-    response.sendRedirect(googleLoginUrl);
+    User user = datastore.getUser(email);
+
+    //No an account to this email yet. User must sign up
+    if(user == null){
+      response.sendRedirect("/signup");
+      return;
+    }
+
+    //if the password doesn't match whats in the database
+    if(!datastore.passwordCorrect(user, password)){
+      request.getSession().invalidate();
+      response.sendRedirect("/login" + "?err=5");
+      return;
+    }
+
+    request.getSession().setAttribute("logged_in", true);
+    request.getSession().setAttribute("email", email);
+    request.getSession().setAttribute("username", email);
+
+    response.sendRedirect("user-page.html?user=" + email);
   }
 }

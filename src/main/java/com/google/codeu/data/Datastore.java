@@ -129,6 +129,15 @@ public class Datastore {
     return user;
   }
 
+  public boolean passwordCorrect(User user, String password){
+    Query query = new Query("user")
+    .setFilter(new Query.FilterPredicate("email", FilterOperator.EQUAL, user.getEmail()));
+    PreparedQuery results = datastore.prepare(query);
+    Entity usesrEntity = results.asSingleEntity();
+
+    return user.getPassword().equals(password);
+  }
+
   public List<Message> getAllMessages() {
     List<Message> messages = new ArrayList<>();
 

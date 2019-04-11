@@ -38,10 +38,11 @@ public class SignUpServlet extends HttpServlet {
 
   private Datastore datastore;
 
-  private final int NULL_EMAIL_ERROR = 1; // email cannot be null
-  private final int NULL_PASSWORD_ERROR = 2; // password cannot be null
-  private final int NULL_ACCCOUNT_TYPE_ERROR = 3; //both account types cannot be selected
-  private final int BOTH_ACCCOUNT_TYPE_ERROR = 4; //at least one account types should be selected
+  public static final int NULL_EMAIL_ERROR = 1; // email cannot be null
+  public static final int NULL_PASSWORD_ERROR = 2; // password cannot be null
+  public static final int NULL_ACCCOUNT_TYPE_ERROR = 3; //both account types cannot be selected
+  public static final int BOTH_ACCCOUNT_TYPE_ERROR = 4; //at least one account types should be selected
+  public static final int INVALID_PASSWORD_ERROR = 5; // used in login servlet
 
   @Override
   public void init() {
@@ -87,6 +88,8 @@ public class SignUpServlet extends HttpServlet {
     String password = request.getParameter("password");
     String accountType[] = request.getParameterValues("account_type");
 
+
+
     if(email.equals("")){
       response.sendRedirect("/signup" + "?err=1");
       return;
@@ -101,11 +104,18 @@ public class SignUpServlet extends HttpServlet {
       return;
     }
 
+    //Already an account to this email
+    if(datastore.getUser(email) != null){
+      response.sendRedirect("/login");
+      return;
+    }
+
     request.getSession().setAttribute("logged_in", true);
     request.getSession().setAttribute("email", email);
     request.getSession().setAttribute("username", email);
 
     datastore.storeUser(new User(email, "", password, accountType[0]));
 
+    response.sendRedirect("user-page.html?user=" + email);
   }
 }
