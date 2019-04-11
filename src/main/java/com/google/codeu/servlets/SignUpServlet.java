@@ -89,23 +89,23 @@ public class SignUpServlet extends HttpServlet {
 
     if(email.equals("")){
       response.sendRedirect("/signup" + "?err=1");
+      return;
     }else if(password.equals("")){
       response.sendRedirect("/signup" + "?err=2");
+      return;
     }else if(accountType == null){
       response.sendRedirect("/signup" + "?err=3");
+      return;
     }else if(accountType.length > 1){
       response.sendRedirect("/signup" + "?err=4");
+      return;
     }
 
     request.getSession().setAttribute("logged_in", true);
     request.getSession().setAttribute("email", email);
     request.getSession().setAttribute("username", email);
 
-    AccountType type = AccountType.STUDENT;
-    if(accountType[0].equals("Professor"))
-      type = AccountType.PROFESSOR;
-
-    datastore.storeUser(new User(email, "", password, type));
+    datastore.storeUser(new User(email, "", password, accountType[0]));
 
   }
 }

@@ -19,6 +19,17 @@ public class User {
     this.accountType = type;
   }
 
+  public User(String email, String aboutMe, String password, String acc_type) {
+    this.email = email;
+    this.aboutMe = aboutMe;
+    this.password = password;
+
+    if(acc_type.equals("professor") || acc_type.equals("Professor") || acc_type.equals("PROFESSOR"))
+      this.accountType = AccountType.PROFESSOR;
+    else
+      this.accountType = AccountType.STUDENT;
+  }
+
   public User(String email, String aboutMe){
     this.email = email;
     this.aboutMe = aboutMe;
@@ -35,8 +46,15 @@ public class User {
   public String getPassword(){
     return password;
   }
-  
+
   public AccountType getAccountType(){
     return accountType;
+  }
+
+  public String getAccountTypeString(){
+    if(accountType == AccountType.STUDENT)
+      return "STUDENT";
+
+    return "PROFESSOR";
   }
 }
