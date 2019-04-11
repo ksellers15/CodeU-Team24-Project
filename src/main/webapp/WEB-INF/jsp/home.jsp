@@ -18,6 +18,7 @@
          <li><a href="/logout">Logout</a></li>
          <% }else{ %>
            <li><a href="/login">Login</a></li>
+           <li><a href="/signup">Sign up</a></li>
          <% } %>
 
       </ul>
