@@ -102,7 +102,9 @@ public class Datastore {
  public void storeUser(User user) {
   Entity userEntity = new Entity("user", user.getEmail());
   userEntity.setProperty("email", user.getEmail());
+  userEntity.setProperty("password", user.getPassword());
   userEntity.setProperty("aboutMe", user.getAboutMe());
+  userEntity.setProperty("account_type", user.getAccountType());
   datastore.put(userEntity);
  }
 
@@ -121,8 +123,9 @@ public class Datastore {
     }
 
     String aboutMe = (String) userEntity.getProperty("aboutMe");
-    User user = new User(email, aboutMe);
-
+    String password = (String) userEntity.getProperty("password");
+    User.AccountType accType = (User.AccountType) userEntity.getProperty("account_type");
+    User user = new User(email, aboutMe, password, accType);
     return user;
   }
 

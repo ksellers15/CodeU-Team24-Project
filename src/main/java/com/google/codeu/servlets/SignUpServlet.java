@@ -27,15 +27,26 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.Integer;
+import com.google.codeu.data.User;
+import com.google.codeu.data.User.AccountType;
+import com.google.codeu.data.Datastore;
+
 
 
 @WebServlet("/signup")
 public class SignUpServlet extends HttpServlet {
 
+  private Datastore datastore;
+
   private final int NULL_EMAIL_ERROR = 1; // email cannot be null
   private final int NULL_PASSWORD_ERROR = 2; // password cannot be null
   private final int NULL_ACCCOUNT_TYPE_ERROR = 3; //both account types cannot be selected
   private final int BOTH_ACCCOUNT_TYPE_ERROR = 4; //at least one account types should be selected
+
+  @Override
+  public void init() {
+    datastore = new Datastore();
+  }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -89,6 +100,12 @@ public class SignUpServlet extends HttpServlet {
     request.getSession().setAttribute("logged_in", true);
     request.getSession().setAttribute("email", email);
     request.getSession().setAttribute("username", email);
+
+    AccountType type = AccountType.STUDENT;
+    if(accountType[0].equals("Professor"))
+      type = AccountType.PROFESSOR;
+
+    datastore.storeUser(new User(email, "", password, type));
 
   }
 }
