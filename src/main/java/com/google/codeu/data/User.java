@@ -19,20 +19,11 @@ public class User {
     this.accountType = type;
   }
 
-  public User(String email, String aboutMe, String password, String acc_type) {
+  public User(String email, String aboutMe, String password, String type) {
     this.email = email;
     this.aboutMe = aboutMe;
     this.password = password;
-
-    if(acc_type.equals("professor") || acc_type.equals("Professor") || acc_type.equals("PROFESSOR"))
-      this.accountType = AccountType.PROFESSOR;
-    else
-      this.accountType = AccountType.STUDENT;
-  }
-
-  public User(String email, String aboutMe){
-    this.email = email;
-    this.aboutMe = aboutMe;
+    this.accountType = AccountType.valueOf(type.toUpperCase());
   }
 
   public String getEmail(){
@@ -49,13 +40,6 @@ public class User {
 
   public AccountType getAccountType(){
     return accountType;
-  }
-
-  public String getAccountTypeString(){
-    if(accountType == AccountType.STUDENT)
-      return "STUDENT";
-
-    return "PROFESSOR";
   }
 
   public void setAboutMe(String text){

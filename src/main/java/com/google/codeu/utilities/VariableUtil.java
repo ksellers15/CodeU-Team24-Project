@@ -25,10 +25,10 @@ public class VariableUtil {
   public static final String MESSAGE_TEXT = "text";
   public static final String TIMESTAMP = "timestamp";
   public static final String RECIPIENT = "recipient";
-  public static final String IMAGE_URL = "image_url";
-  public static final String ACCOUNT_TYPE = "account_type";
+  public static final String IMAGE_URL = "imageUrl";
+  public static final String ACCOUNT_TYPE = "accountType";
 
-  public static final String LOGGED_IN = "logged_in";
+  public static final String LOGGED_IN = "loggedIn";
 
 
   private VariableUtil(){}

@@ -105,7 +105,7 @@ public class Datastore {
   userEntity.setProperty(VariableUtil.EMAIL, user.getEmail());
   userEntity.setProperty(VariableUtil.PASSWORD, user.getPassword());
   userEntity.setProperty(VariableUtil.ABOUT_ME, user.getAboutMe());
-  userEntity.setProperty(VariableUtil.ACCOUNT_TYPE, user.getAccountTypeString());
+  userEntity.setProperty(VariableUtil.ACCOUNT_TYPE, user.getAccountType().toString());
   datastore.put(userEntity);
  }
 
