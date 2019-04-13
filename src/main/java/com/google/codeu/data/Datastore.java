@@ -129,12 +129,7 @@ public class Datastore {
     return user;
   }
 
-  public boolean passwordCorrect(User user, String password){
-    Query query = new Query("user")
-    .setFilter(new Query.FilterPredicate("email", FilterOperator.EQUAL, user.getEmail()));
-    PreparedQuery results = datastore.prepare(query);
-    Entity usesrEntity = results.asSingleEntity();
-
+  public boolean isPasswordCorrect(User user, String password){
     return user.getPassword().equals(password);
   }
 
