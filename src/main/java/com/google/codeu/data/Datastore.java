@@ -27,6 +27,7 @@ import com.google.appengine.api.datastore.FetchOptions;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import com.google.codeu.utilities.VariableUtil;
 
 /** Provides access to the data stored in Datastore. */
 public class Datastore {
@@ -39,13 +40,13 @@ public class Datastore {
 
   /** Stores the Message in Datastore. */
   public void storeMessage(Message message) {
-    Entity messageEntity = new Entity("Message", message.getId().toString());
-    messageEntity.setProperty("user", message.getUser());
-    messageEntity.setProperty("text", message.getText());
-    messageEntity.setProperty("timestamp", message.getTimestamp());
-    messageEntity.setProperty("recipient", message.getRecipient());
+    Entity messageEntity = new Entity(VariableUtil.MESSAGE, message.getId().toString());
+    messageEntity.setProperty(VariableUtil.USER, message.getUser());
+    messageEntity.setProperty(VariableUtil.MESSAGE_TEXT, message.getText());
+    messageEntity.setProperty(VariableUtil.TIMESTAMP, message.getTimestamp());
+    messageEntity.setProperty(VariableUtil.RECIPIENT, message.getRecipient());
     if(message.getImageUrl() != null){
-      messageEntity.setProperty("imageUrl", message.getImageUrl());
+      messageEntity.setProperty(VariableUtil.IMAGE_URL, message.getImageUrl());
     }
 
     datastore.put(messageEntity);
@@ -61,21 +62,21 @@ public class Datastore {
     List<Message> messages = new ArrayList<>();
 
     Query query =
-        new Query("Message")
-            .setFilter(new Query.FilterPredicate("recipient", FilterOperator.EQUAL, recipient))
-            .addSort("timestamp", SortDirection.DESCENDING);
+        new Query(VariableUtil.MESSAGE)
+            .setFilter(new Query.FilterPredicate(VariableUtil.RECIPIENT, FilterOperator.EQUAL, recipient))
+            .addSort(VariableUtil.TIMESTAMP, SortDirection.DESCENDING);
     PreparedQuery results = datastore.prepare(query);
 
     for (Entity entity : results.asIterable()) {
       try {
         String idString = entity.getKey().getName();
         UUID id = UUID.fromString(idString);
-        String user = (String) entity.getProperty("user");
+        String user = (String) entity.getProperty(VariableUtil.USER);
 
-        String text = (String) entity.getProperty("text");
-        long timestamp = (long) entity.getProperty("timestamp");
+        String text = (String) entity.getProperty(VariableUtil.MESSAGE_TEXT);
+        long timestamp = (long) entity.getProperty(VariableUtil.TIMESTAMP);
 
-        String image = (String) entity.getProperty("imageUrl");
+        String image = (String) entity.getProperty(VariableUtil.IMAGE_URL);
 
         Message message = new Message(id, user, text, timestamp, recipient, image);
         messages.add(message);
@@ -92,7 +93,7 @@ public class Datastore {
 
   /** Returns the total number of messages for all users. */
   public int getTotalMessageCount(){
-    Query query = new Query("Message");
+    Query query = new Query(VariableUtil.MESSAGE);
     PreparedQuery results = datastore.prepare(query);
     return results.countEntities(FetchOptions.Builder.withLimit(1000));
   }
@@ -100,11 +101,11 @@ public class Datastore {
 
   /** Stores the User in Datastore. */
  public void storeUser(User user) {
-  Entity userEntity = new Entity("user", user.getEmail());
-  userEntity.setProperty("email", user.getEmail());
-  userEntity.setProperty("password", user.getPassword());
-  userEntity.setProperty("aboutMe", user.getAboutMe());
-  userEntity.setProperty("account_type", user.getAccountTypeString());
+  Entity userEntity = new Entity(VariableUtil.USER, user.getEmail());
+  userEntity.setProperty(VariableUtil.EMAIL, user.getEmail());
+  userEntity.setProperty(VariableUtil.PASSWORD, user.getPassword());
+  userEntity.setProperty(VariableUtil.ABOUT_ME, user.getAboutMe());
+  userEntity.setProperty(VariableUtil.ACCOUNT_TYPE, user.getAccountTypeString());
   datastore.put(userEntity);
  }
 
@@ -114,17 +115,17 @@ public class Datastore {
   */
   public User getUser(String email) {
 
-    Query query = new Query("user")
-      .setFilter(new Query.FilterPredicate("email", FilterOperator.EQUAL, email));
+    Query query = new Query(VariableUtil.USER)
+      .setFilter(new Query.FilterPredicate(VariableUtil.EMAIL, FilterOperator.EQUAL, email));
     PreparedQuery results = datastore.prepare(query);
     Entity userEntity = results.asSingleEntity();
     if(userEntity == null) {
      return null;
     }
 
-    String aboutMe = (String) userEntity.getProperty("aboutMe");
-    String password = (String) userEntity.getProperty("password");
-    String accType = (String) userEntity.getProperty("account_type");
+    String aboutMe = (String) userEntity.getProperty(VariableUtil.ABOUT_ME);
+    String password = (String) userEntity.getProperty(VariableUtil.PASSWORD);
+    String accType = (String) userEntity.getProperty(VariableUtil.ACCOUNT_TYPE);
     User user = new User(email, aboutMe, password, accType);
     return user;
   }
@@ -137,20 +138,20 @@ public class Datastore {
     List<Message> messages = new ArrayList<>();
 
     Query query =
-        new Query("Message")
-            .addSort("timestamp", SortDirection.DESCENDING);
+        new Query(VariableUtil.MESSAGE)
+            .addSort(VariableUtil.TIMESTAMP, SortDirection.DESCENDING);
     PreparedQuery results = datastore.prepare(query);
 
     for (Entity entity : results.asIterable()) {
       try {
         String idString = entity.getKey().getName();
         UUID id = UUID.fromString(idString);
-        String text = (String) entity.getProperty("text");
-        long timestamp = (long) entity.getProperty("timestamp");
+        String text = (String) entity.getProperty(VariableUtil.MESSAGE_TEXT);
+        long timestamp = (long) entity.getProperty(VariableUtil.TIMESTAMP);
 
-        String image = (String) entity.getProperty("imageUrl");
+        String image = (String) entity.getProperty(VariableUtil.IMAGE_URL);
 
-        Message message = new Message(id, (String) entity.getProperty("user"), text, timestamp, "", image);
+        Message message = new Message(id, (String) entity.getProperty(VariableUtil.USER), text, timestamp, "", image);
         messages.add(message);
       } catch (Exception e) {
         System.err.println("Error reading message.");
