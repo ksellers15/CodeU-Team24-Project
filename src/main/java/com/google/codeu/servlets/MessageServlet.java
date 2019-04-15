@@ -96,7 +96,8 @@ public class MessageServlet extends HttpServlet {
     String recipient = request.getParameter("recipient");
 	float sentimentScore = getSentimentScore(text);
 
-    Message message = new Message(user, MessageUtil.formatImages(text), recipient, sentimentScore);
+    //Message message = new Message(user, MessageUtil.formatImages(text), recipient);
+	Message message = new Message(user, MessageUtil.formatImages(text), recipient, sentimentScore);
 
     MessageUtil.checkIfImagesUploaded(request, message);
 
@@ -121,13 +122,30 @@ public class MessageServlet extends HttpServlet {
   
   //a helper function that takes a String value and returns a score
   private float getSentimentScore(String text) throws IOException {
-	Document doc = Document.newBuilder()
-      .setContent(text).setType(Type.PLAIN_TEXT).build();
+	// Document doc = Document.newBuilder()
+      // .setContent(text).setType(Type.PLAIN_TEXT).build();
 
-	LanguageServiceClient languageService = LanguageServiceClient.create();
-	Sentiment sentiment = languageService.analyzeSentiment(doc).getDocumentSentiment();
-	languageService.close();
+	// LanguageServiceClient languageService = LanguageServiceClient.create();
+	// System.out.print(doc);
+	// AnalyzeSentimentResponse response = languageService.analyzeSentiment(doc);
+	// //Sentiment sentiment = languageService.analyzeSentiment(doc).getDocumentSentiment();
+	// languageService.close();
 
-	return sentiment.getScore();
+	// //return sentiment.getScore();
+	// return (float)4.5;
+	
+	try (LanguageServiceClient language = LanguageServiceClient.create()) {
+	  text = "hello";
+      // The text to analyze
+      Document doc = Document.newBuilder()
+          .setContent(text).setType(Type.PLAIN_TEXT).build();
+
+      // Detects the sentiment of the text
+      Sentiment sentiment = language.analyzeSentiment(doc).getDocumentSentiment();
+
+      System.out.printf("Text: %s%n", text);
+      System.out.printf("Sentiment: %s, %s%n", sentiment.getScore(), sentiment.getMagnitude());
+	  return sentiment.getScore();
+    }
   }
 }

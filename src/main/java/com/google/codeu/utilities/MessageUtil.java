@@ -86,7 +86,8 @@ public class MessageUtil {
     BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
     Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(req);
     List<BlobKey> blobKeys = blobs.get("image");
-
+	
+	System.out.println(blobKeys);
     //Check to see if any images were uploaded
     if(blobKeys != null && !blobKeys.isEmpty()){
       BlobKey blobKey = blobKeys.get(0);
