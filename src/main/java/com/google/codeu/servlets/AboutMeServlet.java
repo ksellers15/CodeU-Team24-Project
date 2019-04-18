@@ -11,6 +11,7 @@ import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.codeu.data.Datastore;
 import com.google.codeu.data.User;
+import com.google.codeu.utilities.VariableUtil;
 
 /**
  * Handles fetching and saving user data.
@@ -55,12 +56,12 @@ public class AboutMeServlet extends HttpServlet {
       throws IOException {
 
     HttpSession session = request.getSession();
-    if(session.getAttribute("logged_in") == null){
+    if(session.getAttribute(VariableUtil.LOGGED_IN) == null){
       response.sendRedirect("/home");
       return;
     }
 
-    String userEmail = (String) session.getAttribute("email");
+    String userEmail = (String) session.getAttribute(VariableUtil.EMAIL);
     User user = datastore.getUser(userEmail);
 
     String aboutMe = request.getParameter("about-me");

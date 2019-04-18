@@ -63,7 +63,7 @@
                   return response.json();
                 })
                 .then((loginStatus) => {
-                  if (loginStatus.isLoggedIn) {
+                  if (loginStatus.loggedIn) {
                     fetchImageUploadUrlAndShowForm();
                   }else{
                     const loginDiv = document.getElementById('login_to_post_message');

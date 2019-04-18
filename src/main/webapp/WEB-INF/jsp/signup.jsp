@@ -31,11 +31,11 @@
           <br>
           <div style="display: -webkit-inline-box;">
             <p style="margin: 8px;font-size:12px;">
-              <input type="radio" name="account_type" value="Student" id="isStudent">
+              <input type="radio" name="accountType" value="Student" id="isStudent">
                 <label for="isStudent">Student</label>
               </p>
             <p style="font-size:12px;margin: 8px;">
-              <input type="radio" name="account_type" value="Professor" id="isProfessor">
+              <input type="radio" name="accountType" value="Professor" id="isProfessor">
                 <label for="isProfessor">Professor</label>
             </p>
           </div>

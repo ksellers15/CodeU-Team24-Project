@@ -83,14 +83,14 @@ public class MessageServlet extends HttpServlet {
 
     HttpSession session = request.getSession();
 
-    if(session.getAttribute("logged_in") == null){
+    if(session.getAttribute(VariableUtil.LOGGED_IN) == null){
       response.sendRedirect("/home");
       return;
     }
 
-    String user = (String) session.getAttribute("email");
-    String text = Jsoup.clean(request.getParameter("text"), Whitelist.basic());
-    String recipient = request.getParameter("recipient");
+    String user = (String) session.getAttribute(VariableUtil.EMAIL);
+    String text = Jsoup.clean(request.getParameter(VariableUtil.MESSAGE_TEXT), Whitelist.basic());
+    String recipient = request.getParameter(VariableUtil.RECIPIENT);
 
     Message message = new Message(user, MessageUtil.formatImages(text), recipient);
 

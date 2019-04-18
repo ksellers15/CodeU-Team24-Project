@@ -97,7 +97,7 @@ public class SignUpServlet extends HttpServlet {
     }else if(password.equals("")){
       response.sendRedirect("/signup?err=2");
       return;
-    }else if(accountType == null || accountType.equals("")){
+    }else if(accountType == null){
       response.sendRedirect("/signup?err=3");
       return;
     }
