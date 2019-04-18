@@ -24,9 +24,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import com.google.codeu.utilities.VariableUtil;
+
 
 /**
- * Returns login data as JSON, e.g. {"isLoggedIn": true, "username": "Ada"}
+ * Returns login data as JSON, e.g. {VariableUtil.LOGGED_IN: true, "username": "Ada"}
  */
 @WebServlet("/login-status")
 public class LoginStatusServlet extends HttpServlet {
@@ -36,15 +38,15 @@ public class LoginStatusServlet extends HttpServlet {
 
     JsonObject jsonObject = new JsonObject();
 
-    jsonObject.addProperty("isLoggedIn", false);
+    jsonObject.addProperty(VariableUtil.LOGGED_IN, false);
 
     HttpSession session = request.getSession();
     if(session != null){
-      boolean isLoggedIn = session.getAttribute("logged_in") != null ? (boolean) session.getAttribute("logged_in") : false;
-      String email = session.getAttribute("email") != null ? (String) session.getAttribute("email") : "";
+      boolean isLoggedIn = session.getAttribute(VariableUtil.LOGGED_IN) != null ? (boolean) session.getAttribute(VariableUtil.LOGGED_IN) : false;
+      String email = session.getAttribute(VariableUtil.EMAIL) != null ? (String) session.getAttribute(VariableUtil.EMAIL) : "";
       if(!email.equals("")){
-        jsonObject.addProperty("isLoggedIn", isLoggedIn);
-        jsonObject.addProperty("username", email);
+        jsonObject.addProperty(VariableUtil.LOGGED_IN, isLoggedIn);
+        jsonObject.addProperty(VariableUtil.EMAIL, email);
       }
     }
 

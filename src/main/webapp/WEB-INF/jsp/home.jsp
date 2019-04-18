@@ -1,4 +1,4 @@
-<% boolean isUserLoggedIn = (boolean) request.getAttribute("isUserLoggedIn"); %>
+<% boolean isUserLoggedIn = (boolean) request.getAttribute("loggedIn"); %>
 <html>
   <head>
     <meta charset="UTF-8">
@@ -12,9 +12,9 @@
         <li><a href="/feed.html">Public Feed</a></li>
 
          <% if(isUserLoggedIn){
-          String username = (String) request.getAttribute("username");
+          String email = (String) request.getAttribute("email");
          %>
-         <li><a href="/user-page.html?user=<%= username %>">Your Page</a></li>
+         <li><a href="/user-page.html?user=<%= email %>">Your Page</a></li>
          <li><a href="/logout">Logout</a></li>
          <% }else{ %>
            <li><a href="/login">Login</a></li>

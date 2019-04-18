@@ -38,7 +38,7 @@ function showMessageFormIfViewingSelf() {
         return response.json();
       })
       .then((loginStatus) => {
-        if (loginStatus.isLoggedIn) {
+        if (loginStatus.loggedIn) {
           document.getElementById('recipientInput').value = parameterUsername;
           const messageForm = document.getElementById('message-form');
           messageForm.classList.remove('hidden');
@@ -127,7 +127,7 @@ function fetchAboutMe(){
             return response.json();
           })
           .then((loginStatus) => {
-            if (loginStatus.isLoggedIn && loginStatus.username == parameterUsername) {
+            if (loginStatus.loggedIn && loginStatus.email == parameterUsername) {
               const aboutMeForm = document.getElementById('about_me_form');
               aboutMeForm.classList.remove('hidden');
               aboutMeText.innerHTML = 'You have not entered any information yet.';

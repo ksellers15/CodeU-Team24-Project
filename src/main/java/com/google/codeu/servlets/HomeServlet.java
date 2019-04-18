@@ -9,9 +9,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.codeu.utilities.VariableUtil;
 
 
-@WebServlet("/home")
+
+@WebServlet("/")
 public class HomeServlet extends HttpServlet {
 
   @Override
@@ -20,13 +22,13 @@ public class HomeServlet extends HttpServlet {
       HttpSession session = request.getSession();
       boolean isUserLoggedIn = false;
 
-      if(session != null && session.getAttribute("logged_in") != null)
-        isUserLoggedIn = (boolean) session.getAttribute("logged_in");
+      if(session != null && session.getAttribute(VariableUtil.LOGGED_IN) != null)
+        isUserLoggedIn = (boolean) session.getAttribute(VariableUtil.LOGGED_IN);
 
-      request.setAttribute("isUserLoggedIn", isUserLoggedIn);
+      request.setAttribute(VariableUtil.LOGGED_IN, isUserLoggedIn);
 
       if(isUserLoggedIn)
-        request.setAttribute("username", session.getAttribute("email"));
+        request.setAttribute(VariableUtil.EMAIL, session.getAttribute(VariableUtil.EMAIL));
 
       request.getRequestDispatcher("WEB-INF/jsp/home.jsp").forward(request, response);
     }

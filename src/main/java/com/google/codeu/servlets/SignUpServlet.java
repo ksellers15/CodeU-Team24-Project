@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.lang.Integer;
 import com.google.codeu.data.User;
 import com.google.codeu.data.User.AccountType;
+import com.google.codeu.utilities.VariableUtil;
 import com.google.codeu.data.Datastore;
 
 
@@ -84,23 +85,20 @@ public class SignUpServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-    String email = request.getParameter("email");
-    String password = request.getParameter("password");
-    String accountType[] = request.getParameterValues("account_type");
+    String email = request.getParameter(VariableUtil.EMAIL);
+    String password = request.getParameter(VariableUtil.PASSWORD);
+    String accountType = request.getParameter(VariableUtil.ACCOUNT_TYPE);
 
 
 
     if(email.equals("")){
-      response.sendRedirect("/signup" + "?err=1");
+      response.sendRedirect("/signup?err=1");
       return;
     }else if(password.equals("")){
-      response.sendRedirect("/signup" + "?err=2");
+      response.sendRedirect("/signup?err=2");
       return;
-    }else if(accountType == null){
-      response.sendRedirect("/signup" + "?err=3");
-      return;
-    }else if(accountType.length > 1){
-      response.sendRedirect("/signup" + "?err=4");
+    }else if(accountType.isEmpty()){
+      response.sendRedirect("/signup?err=3");
       return;
     }
 
@@ -110,11 +108,20 @@ public class SignUpServlet extends HttpServlet {
       return;
     }
 
-    request.getSession().setAttribute("logged_in", true);
-    request.getSession().setAttribute("email", email);
-    request.getSession().setAttribute("username", email);
+    request.getSession().setAttribute(VariableUtil.LOGGED_IN, true);
+    request.getSession().setAttribute(VariableUtil.EMAIL, email);
 
-    datastore.storeUser(new User(email, "", password, accountType[0]));
+    AccountType type = null;
+
+    try{
+      type = AccountType.valueOf(accountType.toUpperCase());
+    }catch(IllegalArgumentException e){
+        response.sendRedirect("/signup?err5");
+        return;
+    }
+
+
+    datastore.storeUser(new User(email, "", password, type));
 
     response.sendRedirect("user-page.html?user=" + email);
   }

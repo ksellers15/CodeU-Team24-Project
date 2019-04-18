@@ -19,12 +19,12 @@ public class User {
     this.accountType = type;
   }
 
-  public User(String email, String aboutMe, String password, String type) {
-    this.email = email;
-    this.aboutMe = aboutMe;
-    this.password = password;
-    this.accountType = AccountType.valueOf(type.toUpperCase());
-  }
+  // public User(String email, String aboutMe, String password, String type) {
+  //   this.email = email;
+  //   this.aboutMe = aboutMe;
+  //   this.password = password;
+  //   this.accountType = AccountType.valueOf(type.toUpperCase());
+  // }
 
   public String getEmail(){
     return email;

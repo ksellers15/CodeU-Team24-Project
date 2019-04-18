@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import com.google.codeu.data.Datastore;
 import com.google.codeu.data.User;
+import com.google.codeu.utilities.VariableUtil;
 
 /**
  * Redirects the user to the Google login page or their page if they're already logged in.
@@ -50,8 +51,8 @@ public class LoginServlet extends HttpServlet {
 
     //if user tries to login again just redirect them to their pages
     // if they aren't in the database yet add them to the database
-    if(session.getAttribute("logged_in") != null){
-      String email = (String) session.getAttribute("email");
+    if(session.getAttribute(VariableUtil.LOGGED_IN) != null){
+      String email = (String) session.getAttribute(VariableUtil.EMAIL);
       if(!email.equals("")){
         User user = datastore.getUser(email);
         if(user == null){
@@ -91,15 +92,15 @@ public class LoginServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-    String email = request.getParameter("email");
-    String password = request.getParameter("password");
+    String email = request.getParameter(VariableUtil.EMAIL);
+    String password = request.getParameter(VariableUtil.PASSWORD);
 
 
     if(email.equals("")){
-      response.sendRedirect("/login" + "?err=1");
+      response.sendRedirect("/login?err=1");
       return;
     }else if(password.equals("")){
-      response.sendRedirect("/login" + "?err=2");
+      response.sendRedirect("/login?err=2");
       return;
     }
 
@@ -112,15 +113,14 @@ public class LoginServlet extends HttpServlet {
     }
 
     //if the password doesn't match whats in the database
-    if(!datastore.passwordCorrect(user, password)){
+    if(!datastore.isPasswordCorrect(user, password)){
       request.getSession().invalidate();
-      response.sendRedirect("/login" + "?err=5");
+      response.sendRedirect("/login?err=5");
       return;
     }
 
-    request.getSession().setAttribute("logged_in", true);
-    request.getSession().setAttribute("email", email);
-    request.getSession().setAttribute("username", email);
+    request.getSession().setAttribute(VariableUtil.LOGGED_IN, true);
+    request.getSession().setAttribute(VariableUtil.EMAIL, email);
 
     response.sendRedirect("user-page.html?user=" + email);
   }

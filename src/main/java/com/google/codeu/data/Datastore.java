@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import com.google.codeu.utilities.VariableUtil;
+import com.google.codeu.data.User.AccountType;
 
 /** Provides access to the data stored in Datastore. */
 public class Datastore {
@@ -126,7 +127,17 @@ public class Datastore {
     String aboutMe = (String) userEntity.getProperty(VariableUtil.ABOUT_ME);
     String password = (String) userEntity.getProperty(VariableUtil.PASSWORD);
     String accType = (String) userEntity.getProperty(VariableUtil.ACCOUNT_TYPE);
-    User user = new User(email, aboutMe, password, accType);
+
+    AccountType type = null;
+    try{
+      type = AccountType.valueOf(accType);
+    }catch(IllegalArgumentException e){
+      return null;
+    }catch(NullPointerException e2){
+      return null;
+    }
+
+    User user = new User(email, aboutMe, password, type);
     return user;
   }
 
