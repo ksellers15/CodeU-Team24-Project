@@ -82,7 +82,7 @@ public class Datastore {
 
         String text = (String) entity.getProperty("text");
         long timestamp = (long) entity.getProperty("timestamp");
-		float sentimentScore = (float)0;
+		float sentimentScore = 0.0f;
 		if(entity.getProperty("sentimentScore") != null){
 			sentimentScore = ((Double) entity.getProperty("sentimentScore")).floatValue();
 		}
@@ -152,7 +152,7 @@ public class Datastore {
         UUID id = UUID.fromString(idString);
         String text = (String) entity.getProperty("text");
         long timestamp = (long) entity.getProperty("timestamp");
-		float sentimentScore = (float)entity.getProperty("sentimentScore");
+		float sentimentScore = ((Double) entity.getProperty("sentimentScore")).floatValue();
         String image = (String) entity.getProperty("imageUrl");
 
         Message message = new Message(id, (String) entity.getProperty("user"), text, timestamp, "", image,sentimentScore);

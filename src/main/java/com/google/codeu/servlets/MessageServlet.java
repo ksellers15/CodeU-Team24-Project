@@ -122,30 +122,19 @@ public class MessageServlet extends HttpServlet {
   
   //a helper function that takes a String value and returns a score
   private float getSentimentScore(String text) throws IOException {
-	// Document doc = Document.newBuilder()
-      // .setContent(text).setType(Type.PLAIN_TEXT).build();
-
-	// LanguageServiceClient languageService = LanguageServiceClient.create();
-	// System.out.print(doc);
-	// AnalyzeSentimentResponse response = languageService.analyzeSentiment(doc);
-	// //Sentiment sentiment = languageService.analyzeSentiment(doc).getDocumentSentiment();
-	// languageService.close();
-
-	// //return sentiment.getScore();
-	// return (float)4.5;
-	
+	float score = 0.0f;
 	try (LanguageServiceClient language = LanguageServiceClient.create()) {
-	  text = "hello";
       // The text to analyze
       Document doc = Document.newBuilder()
           .setContent(text).setType(Type.PLAIN_TEXT).build();
 
       // Detects the sentiment of the text
       Sentiment sentiment = language.analyzeSentiment(doc).getDocumentSentiment();
-
-      System.out.printf("Text: %s%n", text);
-      System.out.printf("Sentiment: %s, %s%n", sentiment.getScore(), sentiment.getMagnitude());
-	  return sentiment.getScore();
-    }
+	  
+	  score = sentiment.getScore();
+    }catch (Exception e){
+		e.printStackTrace(System.err);
+	}
+	return score;
   }
 }
