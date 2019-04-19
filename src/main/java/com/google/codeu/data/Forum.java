@@ -1,6 +1,8 @@
 package com.google.codeu.data;
 
 import java.util.UUID;
+import java.util.List;
+import com.google.codeu.data.User;
 import com.google.codeu.utilities.*;
 
 /** A forum created by professors for students to subscribe to */
@@ -9,25 +11,30 @@ public class Forum {
   private UUID id;
   private User owner;
   private List<User> subscribers;
-  private boolean private;
+  private boolean isPrivate;
   private String text;
   private long timestamp;
 
-  public Forum(User owner, boolean private, String text){
-    this.Forum(UUID.randomUUID(), owner, priv, text, System.currentTimeMillis());
+  public Forum(User owner, boolean isPrivate, String text) {
+    this(UUID.randomUUID(), owner, isPrivate, text, System.currentTimeMillis());
   }
 
-  private Forum(UUID id, User owner, boolean priv, String text, long timestamp){
+  public Forum(UUID id, User owner, boolean priv, String text, long timestamp) {
     this.id = id;
     this.owner = owner;
-    this.private = priv;
+    this.isPrivate = priv;
     this.text = text;
     this.timestamp = timestamp;
   }
 
-  void addSubscriber(User user){
+  void addSubscriber(User user) {
     this.subscribers.add(user);
   }
 
+  String toString(){
+    return "Owner: " user.getEmail() + "\n Text: " + text + "\nPrivate: " + isPrivate +
+      "\nID: " + id + "\n timestamp: " + timestamp;
+
+  }
 
 }

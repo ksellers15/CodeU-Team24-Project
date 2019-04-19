@@ -35,7 +35,8 @@ limitations under the License.
       <img src="https://www.manufacturingusa.com/sites/manufacturingusa.com/files/default.png" style="
           height: 150px;
           width: 150px;
-          border-radius: 100px;" img="">
+          border-radius: 100px;"
+        </img>
       <div id="about_me_container" style="margin: 16px; width: 600px;
        height: 125px;">
         <div id="about_me_text" style="width=inherit; margin-top=10px; margin-bottom=15px;"></div>
@@ -48,13 +49,14 @@ limitations under the License.
           </div>
       </div>
     </div>
-    <form id="message-form" action="/messages" method="POST" class="hidden" enctype="multipart/form-data" style="max-width: 700px;">
+    <form id="message-form" action="/forums" method="POST" class="hidden" enctype="multipart/form-data" style="max-width: 700px;">
 	  <ul id="languages"></ul>
       Enter a new message:
       <br/>
+      <input type="checkbox" </input>
       <textarea name="text" id="message-input"></textarea>
       <br/>
-      Add an image to your message.
+      Create a new forum.
       <input type="file" name="image">
       <br/>
       <input type="hidden" value="" name="recipient" id="recipientInput">
