@@ -49,17 +49,16 @@ limitations under the License.
           </div>
       </div>
     </div>
-    <form id="message-form" action="/forums" method="POST" class="hidden" enctype="multipart/form-data" style="max-width: 700px;">
-	  <ul id="languages"></ul>
-      Enter a new message:
-      <br/>
-      <input type="checkbox" </input>
+    <form id="forum-form" action="/forums" method="POST" enctype="multipart/form-data" style="max-width: 700px;">
+      <p style="margin: 8px; font-size: 12px;">
+        <input type="checkbox" name="isPrivate" value="false" id="isPrivate">
+          <label for="isPrivate">Private</label>
+        </p>
       <textarea name="text" id="message-input"></textarea>
       <br/>
       Create a new forum.
       <input type="file" name="image">
       <br/>
-      <input type="hidden" value="" name="recipient" id="recipientInput">
       <script>
 	      const config = {removePlugin: [  'List', 'ImageUpload', 'Link' ]};
 	      ClassicEditor.create( document.getElementById('message-input'), config );

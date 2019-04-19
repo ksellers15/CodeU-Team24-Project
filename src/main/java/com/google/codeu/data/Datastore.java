@@ -50,6 +50,46 @@ public class Datastore {
     datastore.put(messageEntity);
   }
 
+  public void storeForum(Forum forum) {
+    Entity forumEntity = new Entity("forum", forum.getId().toString());
+    forumEntity.setProperty("owner", forum.getOwner().getEmail());
+    forumEntity.setProperty("text", forum.getText());
+    forumEntity.setProperty("isPrivate", forum.isPrivate());
+    forumEntity.setProperty("timestamp", forum.getTimestamp());
+
+    datastore.put(forumEntity);
+  }
+
+  public List<Forum> getAllForums(){
+    List<Forum> forums = new ArrayList<>();
+
+    Query query =
+        new Query("forum");
+
+    PreparedQuery results = datastore.prepare(query);
+
+    for (Entity entity : results.asIterable()) {
+      try {
+        String idString = entity.getKey().getName();
+        UUID id = UUID.fromString(idString);
+        User owner = (User) entity.getProperty("owner");
+        String text = (String) entity.getProperty("text");
+        boolean isPrivate = (boolean) entity.getProperty("isPrivate");
+        long timestamp = (long) entity.getProperty("timestamp");
+
+        Forum forum = new Forum(id, owner, isPrivate, text, timestamp);
+        forums.add(forum);
+
+      } catch (Exception e) {
+        System.err.println("Error reading forum.");
+        System.err.println(entity.toString());
+        e.printStackTrace();
+      }
+    }
+
+    return forums;
+  }
+
   /**
    * Gets messages posted by a specific user.
    *

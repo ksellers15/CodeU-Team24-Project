@@ -35,6 +35,8 @@ import com.google.cloud.translate.Translate.TranslateOption;
 import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
 import com.google.codeu.utilities.*;
+import com.google.codeu.data.User;
+import com.google.codeu.data.Forum;
 
 /** Handles fetching and saving {@link Message} instances. */
 @WebServlet("/forums")
@@ -47,17 +49,30 @@ public class ForumServlet extends HttpServlet {
     datastore = new Datastore();
   }
 
+
+  @Override
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+    List<Forum> forums = datastore.getAllForums();
+    response.getWriter().println(forums.size());
+
+    // for (Forum f: forums){
+    //   response.getWriter().println(f.toString() +"\n\n");
+    // }
+  }
+
+
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-    HttpeSession session = request.getSession();
+    HttpSession session = request.getSession();
 
     if(session == null || session.getAttribute("loggedIn") == null) {
       response.sendRedirect("/login");
       return;
     }
 
-    User owner = datastore.getUser(session.getAttribute("email"));
+    User owner = datastore.getUser((String) session.getAttribute("email"));
 
     if(owner == null){
       response.sendRedirect("/login");
@@ -70,8 +85,8 @@ public class ForumServlet extends HttpServlet {
 
     Forum forum = new Forum(owner, isPrivate, MessageUtil.formatText(MessageUtil.formatImages(text)));
 
-    request.getWriter().println(forum.toString());
+    datastore.storeForum(forum);
 
-    // response.sendRedirect("/user-page.html?user=" + recipient);
+    response.sendRedirect("/forums");
   }
 }

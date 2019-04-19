@@ -39,10 +39,10 @@ function showMessageFormIfViewingSelf() {
       })
       .then((loginStatus) => {
         if (loginStatus.isLoggedIn) {
-          document.getElementById('recipientInput').value = parameterUsername;
+          //document.getElementById('recipientInput').value = parameterUsername;
           const messageForm = document.getElementById('message-form');
           messageForm.classList.remove('hidden');
-          fetchImageUploadUrlAndShowForm();
+          //fetchImageUploadUrlAndShowForm();
         }
       });
 }
@@ -55,7 +55,6 @@ function fetchImageUploadUrlAndShowForm() {
     })
     .then((imageUploadUrl) => {
       const messageForm = document.getElementById('message-form');
-      messageForm.action = imageUploadUrl;
     });
 }
 

@@ -56,7 +56,7 @@ public class LoginServlet extends HttpServlet {
         User newUser = new User(user, "");
         datastore.storeUser(newUser);
       }
-      response.sendRedirect("/users/" + user);
+      response.sendRedirect("/user-page.html?user=" + user);
       return;
     }
 

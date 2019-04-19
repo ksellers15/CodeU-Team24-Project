@@ -31,9 +31,29 @@ public class Forum {
     this.subscribers.add(user);
   }
 
-  String toString(){
-    return "Owner: " user.getEmail() + "\n Text: " + text + "\nPrivate: " + isPrivate +
-      "\nID: " + id + "\n timestamp: " + timestamp;
+  public UUID getId(){
+    return id;
+  }
+  
+  public User getOwner(){
+    return this.owner;
+  }
+
+  public String getText(){
+    return this.text;
+  }
+
+  public long getTimestamp(){
+    return this.timestamp;
+  }
+
+  public boolean isPrivate(){
+    return this.isPrivate;
+  }
+
+  public String toString(){
+    return "Owner: " + owner.getEmail() + "\n Text: " + text + "\nPrivate: " + isPrivate
+    + "\nID: " + id + "\n timestamp: " + timestamp;
 
   }
 
