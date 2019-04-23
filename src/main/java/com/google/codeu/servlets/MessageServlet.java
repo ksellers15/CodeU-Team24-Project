@@ -34,6 +34,11 @@ import com.google.cloud.translate.Translate.TranslateOption;
 import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
 import com.google.codeu.utilities.*;
+import com.google.cloud.language.v1.Document;
+import com.google.cloud.language.v1.Document.Type;
+import com.google.cloud.language.v1.LanguageServiceClient;
+import com.google.cloud.language.v1.Sentiment;
+
 
 /** Handles fetching and saving {@link Message} instances. */
 @WebServlet("/messages")
@@ -87,10 +92,12 @@ public class MessageServlet extends HttpServlet {
     }
 
     String user = userService.getCurrentUser().getEmail();
-    String text = Jsoup.clean(request.getParameter("text"), Whitelist.basic());
+    String text = Jsoup.clean(request.getParameter("text"), Whitelist.none());
     String recipient = request.getParameter("recipient");
+	float sentimentScore = getSentimentScore(text);
 
-    Message message = new Message(user, MessageUtil.formatImages(text), recipient);
+    //Message message = new Message(user, MessageUtil.formatImages(text), recipient);
+	Message message = new Message(user, MessageUtil.formatImages(text), recipient, sentimentScore);
 
     MessageUtil.checkIfImagesUploaded(request, message);
 
@@ -111,5 +118,23 @@ public class MessageServlet extends HttpServlet {
 
       message.setText(translatedText);
     }
+  }
+  
+  //a helper function that takes a String value and returns a score
+  private float getSentimentScore(String text) throws IOException {
+	float score = 0.0f;
+	try (LanguageServiceClient language = LanguageServiceClient.create()) {
+      // The text to analyze
+      Document doc = Document.newBuilder()
+          .setContent(text).setType(Type.PLAIN_TEXT).build();
+
+      // Detects the sentiment of the text
+      Sentiment sentiment = language.analyzeSentiment(doc).getDocumentSentiment();
+	  
+	  score = sentiment.getScore();
+    }catch (Exception e){
+		e.printStackTrace(System.err);
+	}
+	return score;
   }
 }
