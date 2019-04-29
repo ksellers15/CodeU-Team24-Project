@@ -41,11 +41,20 @@ public class Datastore {
 
   /** Stores the Message in Datastore. */
   public void storeMessage(Message message) {
+<<<<<<< HEAD
     Entity messageEntity = new Entity(VariableUtil.MESSAGE, message.getId().toString());
     messageEntity.setProperty(VariableUtil.USER, message.getUser());
     messageEntity.setProperty(VariableUtil.MESSAGE_TEXT, message.getText());
     messageEntity.setProperty(VariableUtil.TIMESTAMP, message.getTimestamp());
     messageEntity.setProperty(VariableUtil.RECIPIENT, message.getRecipient());
+=======
+    Entity messageEntity = new Entity("Message", message.getId().toString());
+    messageEntity.setProperty("user", message.getUser());
+    messageEntity.setProperty("text", message.getText());
+    messageEntity.setProperty("timestamp", message.getTimestamp());
+    messageEntity.setProperty("recipient", message.getRecipient());
+	messageEntity.setProperty("sentimentScore", message.getSentimentScore());
+>>>>>>> master
     if(message.getImageUrl() != null){
       messageEntity.setProperty(VariableUtil.IMAGE_URL, message.getImageUrl());
     }
@@ -61,12 +70,28 @@ public class Datastore {
    */
   public List<Message> getMessages(String recipient) {
     List<Message> messages = new ArrayList<>();
+	PreparedQuery results;
 
+<<<<<<< HEAD
     Query query =
         new Query(VariableUtil.MESSAGE)
             .setFilter(new Query.FilterPredicate(VariableUtil.RECIPIENT, FilterOperator.EQUAL, recipient))
             .addSort(VariableUtil.TIMESTAMP, SortDirection.DESCENDING);
     PreparedQuery results = datastore.prepare(query);
+=======
+	if(recipient == null){
+		Query query =
+        new Query("Message")
+			.addSort("timestamp", SortDirection.DESCENDING);
+		results = datastore.prepare(query);
+	}else{
+		Query query =
+        new Query("Message")
+            .setFilter(new Query.FilterPredicate("recipient", FilterOperator.EQUAL, recipient))
+            .addSort("timestamp", SortDirection.DESCENDING);
+		results = datastore.prepare(query);
+	}
+>>>>>>> master
 
     for (Entity entity : results.asIterable()) {
       try {
@@ -74,13 +99,26 @@ public class Datastore {
         UUID id = UUID.fromString(idString);
         String user = (String) entity.getProperty(VariableUtil.USER);
 
+<<<<<<< HEAD
         String text = (String) entity.getProperty(VariableUtil.MESSAGE_TEXT);
         long timestamp = (long) entity.getProperty(VariableUtil.TIMESTAMP);
 
         String image = (String) entity.getProperty(VariableUtil.IMAGE_URL);
 
         Message message = new Message(id, user, text, timestamp, recipient, image);
+=======
+        String text = (String) entity.getProperty("text");
+        long timestamp = (long) entity.getProperty("timestamp");
+		float sentimentScore = 0.0f;
+		if(entity.getProperty("sentimentScore") != null){
+			sentimentScore = ((Double) entity.getProperty("sentimentScore")).floatValue();
+		}
+		String image = (String) entity.getProperty("imageUrl");
+
+        Message message = new Message(id, user, text, timestamp, recipient, image, sentimentScore);
+>>>>>>> master
         messages.add(message);
+      
       } catch (Exception e) {
         System.err.println("Error reading message.");
         System.err.println(entity.toString());
@@ -157,12 +195,21 @@ public class Datastore {
       try {
         String idString = entity.getKey().getName();
         UUID id = UUID.fromString(idString);
+<<<<<<< HEAD
         String text = (String) entity.getProperty(VariableUtil.MESSAGE_TEXT);
         long timestamp = (long) entity.getProperty(VariableUtil.TIMESTAMP);
 
         String image = (String) entity.getProperty(VariableUtil.IMAGE_URL);
 
         Message message = new Message(id, (String) entity.getProperty(VariableUtil.USER), text, timestamp, "", image);
+=======
+        String text = (String) entity.getProperty("text");
+        long timestamp = (long) entity.getProperty("timestamp");
+		float sentimentScore = ((Double) entity.getProperty("sentimentScore")).floatValue();
+        String image = (String) entity.getProperty("imageUrl");
+
+        Message message = new Message(id, (String) entity.getProperty("user"), text, timestamp, "", image,sentimentScore);
+>>>>>>> master
         messages.add(message);
       } catch (Exception e) {
         System.err.println("Error reading message.");

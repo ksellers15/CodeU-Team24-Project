@@ -11,6 +11,7 @@ public class VariableUtil {
   public static final String TIMESTAMP = "timestamp";
   public static final String RECIPIENT = "recipient";
   public static final String IMAGE_URL = "imageUrl";
+  public static final String SENTIMENT_SCORE = "sentimentScore";
   public static final String ACCOUNT_TYPE = "accountType";
 
   public static final String LOGGED_IN = "loggedIn";

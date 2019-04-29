@@ -17,6 +17,133 @@
 /* Prevent the page from becoming too wide. */
 body {
   max-width: 2000px;
+  font: caption;
+  margin: 0px;
+}
+
+.header {
+  display: flex;
+  padding-left: 16px;
+  min-height: 50px;
+  background: grey;
+}
+
+.content {
+  height: -webkit-fill-available;
+}
+
+.main {
+  background: #e8ff7d;
+  height: inherit;
+  display: block;
+}
+
+h3 {
+  position: absolute;
+  left: 0px;
+  font-size: 6vw;
+}
+
+h4{
+  text-shadow: none;
+  color: black;
+  font-size: 2vw;
+}
+.background_image {
+  background-position: center;
+  background-size: contain;
+  background-image: url(https://images.pond5.com/professor-talking-asian-student-discussing-footage-078791702_prevstill.jpeg);
+  background-repeat: no-repeat;
+  height: inherit;
+  opacity: .3;
+}
+
+.main_message {
+  min-width: max-content;
+  width: 90%;
+  height: 400px;
+  position: absolute;
+  top: 20%;
+  margin-left: 32px;
+  color: white;
+  text-shadow: -3px 3px #000000a3;
+}
+.button_container{
+  height: 70px;
+  width: 500px;
+  display: inline-block;
+  position: absolute;
+  bottom: 0px;
+  left: 32px;
+}
+
+.button_left {
+  position: absolute;
+  bottom: 10px;
+  top: 10px;
+  left: 10px;
+  width: 200px;
+  border-radius: 15px;
+  font-size: 1.75vw;
+  text-shadow: -1px 1px #000000bf;
+  background: linear-gradient(to bottom right, yellow, black);
+  color: white;
+}
+
+.button_right {
+  position: absolute;
+  bottom: 10px;
+  top: 10px;
+  right: 10px;
+  width: 200px;
+  border-radius: 15px;
+  font-size: 1.75vw;
+  text-shadow: -1px 1px #000000bf;
+  background: linear-gradient(to bottom right, yellow, black);
+  color: white;
+}
+.button_link{
+    text-decoration: none;
+    color: white
+}
+
+.info_box1 {
+  border-radius: 20px;
+  position: absolute;
+  top: 30%;
+  right: 30px;
+  background: #00000069;
+  box-shadow: -2px 5px #2d1a1a94;
+  width: 25vw;
+  height: 25vw;
+}
+
+.info_box2 {
+  position: absolute;
+  top: 35%;
+  right: 0px;
+  background: #2f17171c;
+  width: 25.5vw;
+  height: 25.5vw;
+  border-radius: 20px;
+}
+
+.info_box3{
+  left: 0;
+  position: absolute;
+  top: 5px;
+  bottom: 0;
+  left: 5px;
+  background: #f7f7f7;
+  width: 24.5vw;
+  height: 24.6vw;
+  border-radius: 20px;
+}
+.info_box_text {
+  margin: 16px;
+  text-shadow: none;
+  color: black;
+  font-size: 1.5vw;
 }
 
 /* Remove bullet points from navigation bar. */
@@ -29,4 +156,9 @@ nav ul {
 nav li {
   display: inline-block;
   margin-right: 10px
+}
+
+nav a {
+  text-decoration: none;
+  color: white
 }
