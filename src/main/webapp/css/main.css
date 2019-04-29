@@ -29,7 +29,27 @@ body {
 }
 
 .content {
-  margin: 8px;
+  height: -webkit-fill-available;
+}
+
+.main {
+  background: #e8ff7d;
+  height: inherit;
+  display: block;
+}
+.background_image {
+  background-position: center;
+  background-size: contain;
+  background-image: url(https://images.pond5.com/professor-talking-asian-student-discussing-footage-078791702_prevstill.jpeg);
+  background-repeat: no-repeat;
+  height: inherit;
+  opacity: .3;
+}
+
+.main_message {
+  position: absolute;
+  left: 50%;
+  top: 50%;
 }
 
 /* Remove bullet points from navigation bar. */
