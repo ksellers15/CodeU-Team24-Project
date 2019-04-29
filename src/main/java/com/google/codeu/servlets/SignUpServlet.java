@@ -14,55 +14,44 @@
  * limitations under the License.
  */
 
-
 package com.google.codeu.servlets;
 
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.gson.JsonObject;
+
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import com.google.codeu.data.Datastore;
+import java.lang.Integer;
 import com.google.codeu.data.User;
+import com.google.codeu.data.User.AccountType;
 import com.google.codeu.utilities.VariableUtil;
+import com.google.codeu.data.Datastore;
 
-/**
- * Redirects the user to the Google login page or their page if they're already logged in.
- */
-@WebServlet("/login")
-public class LoginServlet extends HttpServlet {
+
+
+@WebServlet("/signup")
+public class SignUpServlet extends HttpServlet {
 
   private Datastore datastore;
+
+  public static final int NULL_EMAIL_ERROR = 1; // email cannot be null
+  public static final int NULL_PASSWORD_ERROR = 2; // password cannot be null
+  public static final int NULL_ACCCOUNT_TYPE_ERROR = 3; //both account types cannot be selected
+  public static final int BOTH_ACCCOUNT_TYPE_ERROR = 4; //at least one account types should be selected
+  public static final int INVALID_PASSWORD_ERROR = 5; // used in login servlet
 
   @Override
   public void init() {
     datastore = new Datastore();
   }
 
-
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-
-    HttpSession session = request.getSession();
-
-    //if user tries to login again just redirect them to their pages
-    // if they aren't in the database yet add them to the database
-    if(session.getAttribute(VariableUtil.LOGGED_IN) != null){
-      String email = (String) session.getAttribute(VariableUtil.EMAIL);
-      if(!email.equals("")){
-        User user = datastore.getUser(email);
-        if(user == null){
-          datastore.storeUser(user);
-        }
-
-        response.sendRedirect("user-page.html?user=" + email);
-        return;
-      }
-    }
 
     request.setAttribute("error", false);
 
@@ -72,55 +61,67 @@ public class LoginServlet extends HttpServlet {
       request.setAttribute("error", true);
 
       switch(errorNumber){
-        case SignUpServlet.NULL_EMAIL_ERROR:
+        case NULL_EMAIL_ERROR:
           request.setAttribute("error_message", "Email cannot be null");
           break;
-        case SignUpServlet.NULL_PASSWORD_ERROR:
+        case NULL_PASSWORD_ERROR:
           request.setAttribute("error_message", "Password cannot be null");
           break;
-        case SignUpServlet.INVALID_PASSWORD_ERROR:
-          request.setAttribute("error_message", "Invalid password try again");
+        case NULL_ACCCOUNT_TYPE_ERROR:
+          request.setAttribute("error_message", "At least one account type should be checked");
+          break;
+        case BOTH_ACCCOUNT_TYPE_ERROR:
+        request.setAttribute("error_message", "Both account types cannnot be checked");
           break;
         default:
           break;
       }
     }
 
-    request.getRequestDispatcher("WEB-INF/jsp/login.jsp").forward(request, response);
+    request.getRequestDispatcher("WEB-INF/jsp/signup.jsp").forward(request, response);
   }
+
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
     String email = request.getParameter(VariableUtil.EMAIL);
     String password = request.getParameter(VariableUtil.PASSWORD);
+    String accountType = request.getParameter(VariableUtil.ACCOUNT_TYPE);
+
 
 
     if(email.equals("")){
-      response.sendRedirect("/login?err=1");
+      response.sendRedirect("/signup?err=1");
       return;
     }else if(password.equals("")){
-      response.sendRedirect("/login?err=2");
+      response.sendRedirect("/signup?err=2");
+      return;
+    }else if(accountType == null){
+      response.sendRedirect("/signup?err=3");
       return;
     }
 
-    User user = datastore.getUser(email);
-
-    //No an account to this email yet. User must sign up
-    if(user == null){
-      response.sendRedirect("/signup");
-      return;
-    }
-
-    //if the password doesn't match whats in the database
-    if(!datastore.isPasswordCorrect(user, password)){
-      request.getSession().invalidate();
-      response.sendRedirect("/login?err=5");
+    //Already an account to this email
+    if(datastore.getUser(email) != null){
+      response.sendRedirect("/login");
       return;
     }
 
     request.getSession().setAttribute(VariableUtil.LOGGED_IN, true);
     request.getSession().setAttribute(VariableUtil.EMAIL, email);
+
+    AccountType type = null;
+
+    try{
+      type = AccountType.valueOf(accountType.toUpperCase());
+    }catch(IllegalArgumentException e){
+        response.sendRedirect("/signup?err5");
+        return;
+    }
+
+
+    datastore.storeUser(new User(email, "", password, type));
 
     response.sendRedirect("user-page.html?user=" + email);
   }

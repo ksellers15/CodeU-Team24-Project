@@ -27,6 +27,9 @@ import com.google.appengine.api.datastore.FetchOptions;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import com.google.codeu.utilities.VariableUtil;
+import com.google.codeu.data.User.AccountType;
+
 /** Provides access to the data stored in Datastore. */
 public class Datastore {
 
@@ -38,14 +41,15 @@ public class Datastore {
 
   /** Stores the Message in Datastore. */
   public void storeMessage(Message message) {
-    Entity messageEntity = new Entity("Message", message.getId().toString());
-    messageEntity.setProperty("user", message.getUser());
-    messageEntity.setProperty("text", message.getText());
-    messageEntity.setProperty("timestamp", message.getTimestamp());
-    messageEntity.setProperty("recipient", message.getRecipient());
-	messageEntity.setProperty("sentimentScore", message.getSentimentScore());
+    Entity messageEntity = new Entity(VariableUtil.MESSAGE, message.getId().toString());
+    messageEntity.setProperty(VariableUtil.USER, message.getUser());
+    messageEntity.setProperty(VariableUtil.MESSAGE_TEXT, message.getText());
+    messageEntity.setProperty(VariableUtil.TIMESTAMP, message.getTimestamp());
+    messageEntity.setProperty(VariableUtil.RECIPIENT, message.getRecipient());
+    messageEntity.setProperty(VariableUtil.SENTIMENT_SCORE, message.getSentimentScore());
+
     if(message.getImageUrl() != null){
-      messageEntity.setProperty("imageUrl", message.getImageUrl());
+      messageEntity.setProperty(VariableUtil.IMAGE_URL, message.getImageUrl());
     }
 
     datastore.put(messageEntity);
@@ -59,38 +63,34 @@ public class Datastore {
    */
   public List<Message> getMessages(String recipient) {
     List<Message> messages = new ArrayList<>();
-	PreparedQuery results;
+    Query query =
+        new Query(VariableUtil.MESSAGE)
+            .addSort(VariableUtil.TIMESTAMP, SortDirection.DESCENDING);
 
-	if(recipient == null){
-		Query query =
-        new Query("Message")
-			.addSort("timestamp", SortDirection.DESCENDING);
-		results = datastore.prepare(query);
-	}else{
-		Query query =
-        new Query("Message")
-            .setFilter(new Query.FilterPredicate("recipient", FilterOperator.EQUAL, recipient))
-            .addSort("timestamp", SortDirection.DESCENDING);
-		results = datastore.prepare(query);
-	}
+    if(recipient != null){
+      query.setFilter(new Query.FilterPredicate(VariableUtil.RECIPIENT, FilterOperator.EQUAL, recipient));
+    }
+
+    PreparedQuery results = datastore.prepare(query);
 
     for (Entity entity : results.asIterable()) {
       try {
         String idString = entity.getKey().getName();
         UUID id = UUID.fromString(idString);
-        String user = (String) entity.getProperty("user");
+        String user = (String) entity.getProperty(VariableUtil.USER);
 
-        String text = (String) entity.getProperty("text");
-        long timestamp = (long) entity.getProperty("timestamp");
-		float sentimentScore = 0.0f;
-		if(entity.getProperty("sentimentScore") != null){
-			sentimentScore = ((Double) entity.getProperty("sentimentScore")).floatValue();
-		}
-		String image = (String) entity.getProperty("imageUrl");
+        String text = (String) entity.getProperty(VariableUtil.MESSAGE_TEXT);
+        long timestamp = (long) entity.getProperty(VariableUtil.TIMESTAMP);
+        String image = (String) entity.getProperty(VariableUtil.IMAGE_URL);
+
+        float sentimentScore = 0.0f;
+        if(entity.getProperty(VariableUtil.SENTIMENT_SCORE) != null){
+          sentimentScore = ((Double) entity.getProperty(VariableUtil.SENTIMENT_SCORE)).floatValue();
+        }
 
         Message message = new Message(id, user, text, timestamp, recipient, image, sentimentScore);
         messages.add(message);
-      
+
       } catch (Exception e) {
         System.err.println("Error reading message.");
         System.err.println(entity.toString());
@@ -104,7 +104,7 @@ public class Datastore {
 
   /** Returns the total number of messages for all users. */
   public int getTotalMessageCount(){
-    Query query = new Query("Message");
+    Query query = new Query(VariableUtil.MESSAGE);
     PreparedQuery results = datastore.prepare(query);
     return results.countEntities(FetchOptions.Builder.withLimit(1000));
   }
@@ -112,9 +112,11 @@ public class Datastore {
 
   /** Stores the User in Datastore. */
  public void storeUser(User user) {
-  Entity userEntity = new Entity("User", user.getEmail());
-  userEntity.setProperty("email", user.getEmail());
-  userEntity.setProperty("aboutMe", user.getAboutMe());
+  Entity userEntity = new Entity(VariableUtil.USER, user.getEmail());
+  userEntity.setProperty(VariableUtil.EMAIL, user.getEmail());
+  userEntity.setProperty(VariableUtil.PASSWORD, user.getPassword());
+  userEntity.setProperty(VariableUtil.ABOUT_ME, user.getAboutMe());
+  userEntity.setProperty(VariableUtil.ACCOUNT_TYPE, user.getAccountType().toString());
   datastore.put(userEntity);
  }
 
@@ -122,40 +124,55 @@ public class Datastore {
   * Returns the User owned by the email address, or
   * null if no matching User was found.
   */
- public User getUser(String email) {
+  public User getUser(String email) {
 
-  Query query = new Query("User")
-    .setFilter(new Query.FilterPredicate("email", FilterOperator.EQUAL, email));
-  PreparedQuery results = datastore.prepare(query);
-  Entity userEntity = results.asSingleEntity();
-  if(userEntity == null) {
-   return null;
+    Query query = new Query(VariableUtil.USER)
+      .setFilter(new Query.FilterPredicate(VariableUtil.EMAIL, FilterOperator.EQUAL, email));
+    PreparedQuery results = datastore.prepare(query);
+    Entity userEntity = results.asSingleEntity();
+    if(userEntity == null) {
+     return null;
+    }
+
+    String aboutMe = (String) userEntity.getProperty(VariableUtil.ABOUT_ME);
+    String password = (String) userEntity.getProperty(VariableUtil.PASSWORD);
+    String accType = (String) userEntity.getProperty(VariableUtil.ACCOUNT_TYPE);
+
+    AccountType type = null;
+    try{
+      type = AccountType.valueOf(accType);
+    }catch(IllegalArgumentException e){
+      return null;
+    }catch(NullPointerException e2){
+      return null;
+    }
+
+    User user = new User(email, aboutMe, password, type);
+    return user;
   }
 
-  String aboutMe = (String) userEntity.getProperty("aboutMe");
-  User user = new User(email, aboutMe);
-
-  return user;
- }
+  public boolean isPasswordCorrect(User user, String password){
+    return user.getPassword().equals(password);
+  }
 
   public List<Message> getAllMessages() {
     List<Message> messages = new ArrayList<>();
 
     Query query =
-        new Query("Message")
-            .addSort("timestamp", SortDirection.DESCENDING);
+        new Query(VariableUtil.MESSAGE)
+            .addSort(VariableUtil.TIMESTAMP, SortDirection.DESCENDING);
     PreparedQuery results = datastore.prepare(query);
 
     for (Entity entity : results.asIterable()) {
       try {
         String idString = entity.getKey().getName();
         UUID id = UUID.fromString(idString);
-        String text = (String) entity.getProperty("text");
-        long timestamp = (long) entity.getProperty("timestamp");
-		float sentimentScore = ((Double) entity.getProperty("sentimentScore")).floatValue();
-        String image = (String) entity.getProperty("imageUrl");
+        String text = (String) entity.getProperty(VariableUtil.MESSAGE_TEXT);
+        long timestamp = (long) entity.getProperty(VariableUtil.TIMESTAMP);
+        String image = (String) entity.getProperty(VariableUtil.IMAGE_URL);
+        float sentimentScore = ((Double) entity.getProperty(VariableUtil.SENTIMENT_SCORE)).floatValue();
 
-        Message message = new Message(id, (String) entity.getProperty("user"), text, timestamp, "", image,sentimentScore);
+        Message message = new Message(id, (String) entity.getProperty(VariableUtil.USER), text, timestamp, "", image, sentimentScore);
         messages.add(message);
       } catch (Exception e) {
         System.err.println("Error reading message.");
@@ -163,9 +180,6 @@ public class Datastore {
         e.printStackTrace();
       }
     }
-
     return messages;
   }
-
-
 }

@@ -4,10 +4,19 @@ public class User {
 
   private String email;
   private String aboutMe;
+  private String password;
+  private AccountType accountType;
 
-  public User(String email, String aboutMe) {
+  public enum AccountType{
+    STUDENT,
+    PROFESSOR
+  }
+
+  public User(String email, String aboutMe, String password, AccountType type) {
     this.email = email;
     this.aboutMe = aboutMe;
+    this.password = password;
+    this.accountType = type;
   }
 
   public String getEmail(){
@@ -16,5 +25,17 @@ public class User {
 
   public String getAboutMe() {
     return aboutMe;
+  }
+
+  public String getPassword(){
+    return password;
+  }
+
+  public AccountType getAccountType(){
+    return accountType;
+  }
+
+  public void setAboutMe(String text){
+    this.aboutMe = text;
   }
 }

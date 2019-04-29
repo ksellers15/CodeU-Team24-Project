@@ -16,8 +16,6 @@
 
 package com.google.codeu.servlets;
 
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.JsonObject;
 
 import java.io.IOException;
@@ -25,9 +23,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import com.google.codeu.utilities.VariableUtil;
+
 
 /**
- * Returns login data as JSON, e.g. {"isLoggedIn": true, "username": "Ada"}
+ * Returns login data as JSON, e.g. {VariableUtil.LOGGED_IN: true, "username": "Ada"}
  */
 @WebServlet("/login-status")
 public class LoginStatusServlet extends HttpServlet {
@@ -37,12 +38,16 @@ public class LoginStatusServlet extends HttpServlet {
 
     JsonObject jsonObject = new JsonObject();
 
-    UserService userService = UserServiceFactory.getUserService();
-    if (userService.isUserLoggedIn()) {
-      jsonObject.addProperty("isLoggedIn", true);
-      jsonObject.addProperty("username", userService.getCurrentUser().getEmail());
-    } else {
-      jsonObject.addProperty("isLoggedIn", false);
+    jsonObject.addProperty(VariableUtil.LOGGED_IN, false);
+
+    HttpSession session = request.getSession();
+    if(session != null){
+      boolean isLoggedIn = session.getAttribute(VariableUtil.LOGGED_IN) != null ? (boolean) session.getAttribute(VariableUtil.LOGGED_IN) : false;
+      String email = session.getAttribute(VariableUtil.EMAIL) != null ? (String) session.getAttribute(VariableUtil.EMAIL) : "";
+      if(!email.equals("")){
+        jsonObject.addProperty(VariableUtil.LOGGED_IN, isLoggedIn);
+        jsonObject.addProperty(VariableUtil.EMAIL, email);
+      }
     }
 
     response.setContentType("application/json");

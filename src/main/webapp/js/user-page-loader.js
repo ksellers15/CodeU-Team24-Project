@@ -38,7 +38,7 @@ function showMessageFormIfViewingSelf() {
         return response.json();
       })
       .then((loginStatus) => {
-        if (loginStatus.isLoggedIn) {
+        if (loginStatus.loggedIn) {
           document.getElementById('recipientInput').value = parameterUsername;
           const messageForm = document.getElementById('message-form');
           messageForm.classList.remove('hidden');
@@ -90,12 +90,12 @@ function fetchMessages() {
  * @return {Element}
  */
 function buildMessageDiv(message) {
-	
+
   const headerDiv = document.createElement('div');
   headerDiv.classList.add('message-header');
   headerDiv.appendChild(document.createTextNode(
     message.user + ' - ' +
-    new Date(message.timestamp) + 
+    new Date(message.timestamp) +
     ' [' + message.sentimentScore + ']'));
   headerDiv.classList.add('message-header');
 
@@ -120,7 +120,7 @@ function fetchAboutMe(){
   fetch(url).then((response) => {
     return response.text();
   }).then((aboutMe) => {
-    const aboutMeText = document.getElementById('about_me_text');
+    const aboutMeText = document.getElementById('about-me-text');
 
     if(aboutMe == ''){
       //about me is empty, check to see if user is logged in
@@ -131,8 +131,8 @@ function fetchAboutMe(){
             return response.json();
           })
           .then((loginStatus) => {
-            if (loginStatus.isLoggedIn && loginStatus.username == parameterUsername) {
-              const aboutMeForm = document.getElementById('about_me_form');
+            if (loginStatus.loggedIn && loginStatus.email == parameterUsername) {
+              const aboutMeForm = document.getElementById('about-me-form');
               aboutMeForm.classList.remove('hidden');
               aboutMeText.innerHTML = 'You have not entered any information yet.';
             }else{

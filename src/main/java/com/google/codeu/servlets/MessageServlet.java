@@ -27,6 +27,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 import com.google.cloud.translate.Translate;
@@ -85,16 +86,17 @@ public class MessageServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-    UserService userService = UserServiceFactory.getUserService();
-    if (!userService.isUserLoggedIn()) {
-      response.sendRedirect("/index.html");
+    HttpSession session = request.getSession();
+
+    if(session.getAttribute(VariableUtil.LOGGED_IN) == null){
+      response.sendRedirect("/");
       return;
     }
 
-    String user = userService.getCurrentUser().getEmail();
-    String text = Jsoup.clean(request.getParameter("text"), Whitelist.none());
-    String recipient = request.getParameter("recipient");
-	float sentimentScore = getSentimentScore(text);
+    String user = (String) session.getAttribute(VariableUtil.EMAIL);
+    String text = Jsoup.clean(request.getParameter(VariableUtil.MESSAGE_TEXT), Whitelist.basic());
+    String recipient = request.getParameter(VariableUtil.RECIPIENT);
+    float sentimentScore = getSentimentScore(text);
 
     //Message message = new Message(user, MessageUtil.formatImages(text), recipient);
 	Message message = new Message(user, MessageUtil.formatImages(text), recipient, sentimentScore);
@@ -119,7 +121,7 @@ public class MessageServlet extends HttpServlet {
       message.setText(translatedText);
     }
   }
-  
+
   //a helper function that takes a String value and returns a score
   private float getSentimentScore(String text) throws IOException {
 	float score = 0.0f;
@@ -130,7 +132,7 @@ public class MessageServlet extends HttpServlet {
 
       // Detects the sentiment of the text
       Sentiment sentiment = language.analyzeSentiment(doc).getDocumentSentiment();
-	  
+
 	  score = sentiment.getScore();
     }catch (Exception e){
 		e.printStackTrace(System.err);

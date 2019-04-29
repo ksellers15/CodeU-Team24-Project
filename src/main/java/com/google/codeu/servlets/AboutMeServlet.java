@@ -6,11 +6,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import javax.servlet.http.HttpSession;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.codeu.data.Datastore;
 import com.google.codeu.data.User;
+import com.google.codeu.utilities.VariableUtil;
 
 /**
  * Handles fetching and saving user data.
@@ -54,16 +55,18 @@ public class AboutMeServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException {
 
-    UserService userService = UserServiceFactory.getUserService();
-    if (!userService.isUserLoggedIn()) {
-      response.sendRedirect("/index.html");
+    HttpSession session = request.getSession();
+    if(session.getAttribute(VariableUtil.LOGGED_IN) == null){
+      response.sendRedirect("/");
       return;
     }
 
-    String userEmail = userService.getCurrentUser().getEmail();
-    String aboutMe = request.getParameter("about-me");
+    String userEmail = (String) session.getAttribute(VariableUtil.EMAIL);
+    User user = datastore.getUser(userEmail);
 
-    User user = new User(userEmail, aboutMe);
+    String aboutMe = request.getParameter("about-me");
+    user.setAboutMe(aboutMe);
+
     datastore.storeUser(user);
 
     response.sendRedirect("/user-page.html?user=" + userEmail);
