@@ -23,18 +23,52 @@ limitations under the License.
     <script src="/js/navigation-loader.js"></script>
   </head>
   <body style="text-align: center; "onload="addLoginOrLogoutLinkToNavigation();">
-    <nav>
-      <ul id="navigation">
-        <li><a href="/">Home</a></li>
-        <li><a href="/feed.html">Public Feed</a></li>
+    <div class="header">
+      <nav>
+        <ul id="navigation">
+          <li><a href="/">Home</a></li>
+          <li><a href="/feed.html">Public Feed</a></li>
 
-      </ul>
-    </nav>
-    <h1>CodeU Starter Project</h1>
-    <p>This is the CodeU starter project. Click the links above to login and visit your page.
-    You can post messages on your page, and you can visit other user pages if you have
-    their URL.</p>
-    <p>This is your code now! Feel free to make changes, and don't be afraid to get creative!
-    You could start by modifying this page to tell the world more about your team.</p>
+        </ul>
+      </nav>
+    </div>
+    <div class="content">
+      <div class="main">
+        <div class="background_image"></div>
+        <div class="main_message">
+          <h3>Stay Connected!</h3>
+          <div style="
+              top: 30%;
+              position: absolute;
+              right: 5px;">
+          	<div class="info_box1"></div>
+              <div class="info_box2">
+                  <div class="info_box3">
+                    <h4>What's ConnectIO?</h4>
+                  <div class="info_box_text">
+                      ConnectIO allows students and professors to communicate more effectively! Professors can find students with specific skill sets.
+                  </div>
+                </div>
+              </div>
+            </div>
+          <div class="button_container">
+            <button id="button_left" class="button_left">I'm a Student!
+              <script type="text/javascript">
+                document.getElementById("button_left").onclick = function () {
+                  location.href = "/login";
+                };
+              </script>
+            </button>
+            <button id="button_right" class="button_right">I'm a Professor!
+              <script type="text/javascript">
+                document.getElementById("button_right").onclick = function () {
+                  location.href = "/login";
+                };
+              </script>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
