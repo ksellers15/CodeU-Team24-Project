@@ -57,7 +57,7 @@ public class AboutMeServlet extends HttpServlet {
 
     HttpSession session = request.getSession();
     if(session.getAttribute(VariableUtil.LOGGED_IN) == null){
-      response.sendRedirect("/home");
+      response.sendRedirect("/");
       return;
     }
 

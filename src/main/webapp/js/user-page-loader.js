@@ -90,12 +90,12 @@ function fetchMessages() {
  * @return {Element}
  */
 function buildMessageDiv(message) {
-	
+
   const headerDiv = document.createElement('div');
   headerDiv.classList.add('message-header');
   headerDiv.appendChild(document.createTextNode(
     message.user + ' - ' +
-    new Date(message.timestamp) + 
+    new Date(message.timestamp) +
     ' [' + message.sentimentScore + ']'));
   headerDiv.classList.add('message-header');
 
@@ -120,7 +120,7 @@ function fetchAboutMe(){
   fetch(url).then((response) => {
     return response.text();
   }).then((aboutMe) => {
-    const aboutMeText = document.getElementById('about_me_text');
+    const aboutMeText = document.getElementById('about-me-text');
 
     if(aboutMe == ''){
       //about me is empty, check to see if user is logged in
@@ -132,7 +132,7 @@ function fetchAboutMe(){
           })
           .then((loginStatus) => {
             if (loginStatus.loggedIn && loginStatus.email == parameterUsername) {
-              const aboutMeForm = document.getElementById('about_me_form');
+              const aboutMeForm = document.getElementById('about-me-form');
               aboutMeForm.classList.remove('hidden');
               aboutMeText.innerHTML = 'You have not entered any information yet.';
             }else{
