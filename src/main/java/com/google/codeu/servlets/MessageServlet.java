@@ -89,20 +89,14 @@ public class MessageServlet extends HttpServlet {
     HttpSession session = request.getSession();
 
     if(session.getAttribute(VariableUtil.LOGGED_IN) == null){
-      response.sendRedirect("/home");
+      response.sendRedirect("/");
       return;
     }
 
-<<<<<<< HEAD
     String user = (String) session.getAttribute(VariableUtil.EMAIL);
     String text = Jsoup.clean(request.getParameter(VariableUtil.MESSAGE_TEXT), Whitelist.basic());
     String recipient = request.getParameter(VariableUtil.RECIPIENT);
-=======
-    String user = userService.getCurrentUser().getEmail();
-    String text = Jsoup.clean(request.getParameter("text"), Whitelist.none());
-    String recipient = request.getParameter("recipient");
-	float sentimentScore = getSentimentScore(text);
->>>>>>> master
+    float sentimentScore = getSentimentScore(text);
 
     //Message message = new Message(user, MessageUtil.formatImages(text), recipient);
 	Message message = new Message(user, MessageUtil.formatImages(text), recipient, sentimentScore);
@@ -127,7 +121,7 @@ public class MessageServlet extends HttpServlet {
       message.setText(translatedText);
     }
   }
-  
+
   //a helper function that takes a String value and returns a score
   private float getSentimentScore(String text) throws IOException {
 	float score = 0.0f;
@@ -138,7 +132,7 @@ public class MessageServlet extends HttpServlet {
 
       // Detects the sentiment of the text
       Sentiment sentiment = language.analyzeSentiment(doc).getDocumentSentiment();
-	  
+
 	  score = sentiment.getScore();
     }catch (Exception e){
 		e.printStackTrace(System.err);

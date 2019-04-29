@@ -66,8 +66,8 @@ public class PublicFeedServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
     HttpSession session = request.getSession();
-    if(session.getAttribute("logged_in") == null){
-      response.sendRedirect("/home");
+    if(session.getAttribute(VariableUtil.LOGGED_IN) == null){
+      response.sendRedirect("/");
       return;
     }
 
