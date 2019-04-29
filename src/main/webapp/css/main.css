@@ -17,6 +17,19 @@
 /* Prevent the page from becoming too wide. */
 body {
   max-width: 2000px;
+  font: caption;
+  margin: 0px;
+}
+
+.header {
+  display: flex;
+  padding-left: 16px;
+  min-height: 50px;
+  background: grey;
+}
+
+.content {
+  margin: 8px;
 }
 
 /* Remove bullet points from navigation bar. */
@@ -29,4 +42,9 @@ nav ul {
 nav li {
   display: inline-block;
   margin-right: 10px
+}
+
+nav a {
+  text-decoration: none;
+  color: white
 }
