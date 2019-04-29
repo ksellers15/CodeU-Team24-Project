@@ -28,15 +28,29 @@ public class Message {
   private long timestamp;
   private String recipient;
   private String imageUrl;
+  private float sentimentScore;
 
   /**
    * Constructs a new {@link Message} posted by {@code user} with {@code text} content. Generates a
    * random ID and uses the current system time for the creation time.
    */
+  public Message(String user, String text, String recipient, float sentimentScore) {
+    this(UUID.randomUUID(), user, MessageUtil.formatText(MessageUtil.formatImages(text)), System.currentTimeMillis(), recipient, sentimentScore);
+  }
+  
   public Message(String user, String text, String recipient) {
     this(UUID.randomUUID(), user, MessageUtil.formatText(MessageUtil.formatImages(text)), System.currentTimeMillis(), recipient);
   }
 
+  public Message(UUID id, String user, String text, long timestamp, String recipient, float sentimentScore) {
+    this.id = id;
+    this.user = user;
+    this.text = text;
+    this.timestamp = timestamp;
+    this.recipient = recipient;
+	this.sentimentScore = sentimentScore;
+  }
+  
   public Message(UUID id, String user, String text, long timestamp, String recipient) {
     this.id = id;
     this.user = user;
@@ -45,6 +59,16 @@ public class Message {
     this.recipient = recipient;
   }
 
+  public Message(UUID id, String user, String text, long timestamp, String recipient, String imageUrl, float sentimentScore) {
+    this.id = id;
+    this.user = user;
+    this.text = text;
+    this.timestamp = timestamp;
+    this.recipient = recipient;
+    this.imageUrl = imageUrl;
+	this.sentimentScore = sentimentScore;
+  }
+  
   public Message(UUID id, String user, String text, long timestamp, String recipient, String imageUrl) {
     this.id = id;
     this.user = user;
@@ -73,6 +97,10 @@ public class Message {
   public void setImageUrl(String url){
     this.imageUrl = url;
   }
+  
+  public void setSentimentScore(float sentimentScore){
+	this.sentimentScore = sentimentScore;
+  }
 
   public long getTimestamp() {
     return timestamp;
@@ -84,5 +112,9 @@ public class Message {
 
   public String getImageUrl(){
     return imageUrl;
+  }
+  
+  public float getSentimentScore(){
+	return sentimentScore;
   }
 }
