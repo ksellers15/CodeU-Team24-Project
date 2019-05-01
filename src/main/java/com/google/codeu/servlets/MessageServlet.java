@@ -39,6 +39,7 @@ import com.google.cloud.language.v1.Document;
 import com.google.cloud.language.v1.Document.Type;
 import com.google.cloud.language.v1.LanguageServiceClient;
 import com.google.cloud.language.v1.Sentiment;
+import com.google.appengine.api.images.ImagesServiceFailureException;
 
 
 /** Handles fetching and saving {@link Message} instances. */
@@ -101,8 +102,11 @@ public class MessageServlet extends HttpServlet {
     //Message message = new Message(user, MessageUtil.formatImages(text), recipient);
 	Message message = new Message(user, MessageUtil.formatImages(text), recipient, sentimentScore);
 
+  try{
     MessageUtil.checkIfImagesUploaded(request, message);
-
+  }catch(ImagesServiceFailureException unused){
+    //Do nothing here - this means a message without a image was posted
+  }
     datastore.storeMessage(message);
 
     response.sendRedirect("/user-page.html?user=" + recipient);

@@ -31,6 +31,7 @@ import javax.servlet.http.HttpSession;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 import com.google.codeu.utilities.*;
+import com.google.appengine.api.images.ImagesServiceFailureException;
 
 /** Handles fetching and saving {@link Message} instances. */
 @WebServlet("/feed")
@@ -76,7 +77,11 @@ public class PublicFeedServlet extends HttpServlet {
 
     Message message = new Message(user, MessageUtil.formatImages(text), user);
 
-    MessageUtil.checkIfImagesUploaded(request, message);
+    try{
+      MessageUtil.checkIfImagesUploaded(request, message);
+    }catch(ImagesServiceFailureException unused){
+      //Do nothing here - this means a message without a image was posted
+    }
 
     datastore.storeMessage(message);
 
